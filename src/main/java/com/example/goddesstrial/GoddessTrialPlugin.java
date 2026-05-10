@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.logging.Level;
 
 import com.example.goddesstrial.trial.TrialManager;
+import com.example.goddesstrial.listeners.TrialDeathSystem;
 
 /**
  * GoddessTrial - A Hytale server plugin.
@@ -46,11 +47,9 @@ public class GoddessTrialPlugin extends JavaPlugin {
     protected void setup() {
         LOGGER.at(Level.INFO).log("[GoddessTrial] Setting up...");
 
-        // Register commands
         registerCommands();
-
-        // Register event listeners
         registerListeners();
+        registerSystems();
 
         LOGGER.at(Level.INFO).log("[GoddessTrial] Setup complete!");
     }
@@ -91,5 +90,14 @@ public class GoddessTrialPlugin extends JavaPlugin {
     protected void shutdown() {
         LOGGER.at(Level.INFO).log("[GoddessTrial] Shutting down...");
         instance = null;
+    }
+
+    private void registerSystems() {
+        try {
+            getEntityStoreRegistry().registerSystem(new TrialDeathSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialDeathSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialDeathSystem");
+        }
     }
 }

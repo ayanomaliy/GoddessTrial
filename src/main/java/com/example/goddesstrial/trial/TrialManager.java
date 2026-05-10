@@ -64,4 +64,23 @@ public class TrialManager {
     }
 
     public record TrialResult(boolean success, String message) {}
+
+    public TrialResult failTrialBecauseOfDeath(String playerName) {
+        TrialState state = getState(playerName);
+
+        if (state == null || state.getPhase() != TrialPhase.ACTIVE) {
+            return new TrialResult(false, "Player died, but no active trial was running.");
+        }
+
+        // Reset completely so the player must start and accept again.
+        state.setPhase(TrialPhase.NONE);
+
+        return new TrialResult(true, "You died. The Trial of the Goddess has been reset.");
+    }
+
+    public TrialResult resetTrialOnJoin(String playerName) {
+        TrialState state = getOrCreateState(playerName);
+        state.setPhase(TrialPhase.NONE);
+        return new TrialResult(true, "Trial state reset on join.");
+    }
 }
