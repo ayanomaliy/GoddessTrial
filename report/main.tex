@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper]{article}
+
+% ---------- Language and encoding ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+% ---------- Font ----------
+% Times New Roman-like font that works with pdfLaTeX
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+
+% ---------- Page layout ----------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% ---------- Paragraph style ----------
+% Removes paragraph indentation and adds spacing between paragraphs
+\usepackage{parskip}
+
+% ---------- Links and citations ----------
+\usepackage[hidelinks]{hyperref}
+\usepackage{csquotes}
+
+% ---------- Images ----------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+% ---------- Code listings ----------
+\usepackage{xcolor}
+\usepackage{listings}
+
+\lstdefinestyle{javaStyle}{
+    language=Java,
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    tabsize=4,
+    showstringspaces=false
+}
+
+\lstset{style=javaStyle}
+
+% ---------- Bibliography ----------
+\usepackage[
+    backend=biber,
+    style=apa
+]{biblatex}
+
+\addbibresource{references.bib}
+
+% ---------- Metadata ----------
+\title{Hytale: How Modding Becomes Part of the Development Pipeline}
+\author{Aiysha Frutiger}
+\date{\today}
+
+\begin{document}
+
+    \maketitle
+
+
+    \input{sections/01_research_outline}
+
+    \section{Critical Mod Proposal}
+    \input{sections/02_critical_mod}
+
+    \section{Reflection}
+    \input{sections/03_reflection}
+
+    \printbibliography
+
+\end{document}
