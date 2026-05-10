@@ -1,30 +1,39 @@
 package com.example.goddesstrial.commands;
 
+import com.example.goddesstrial.trial.TrialManager;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractCommandCollection;
 
 /**
  * Main command for GoddessTrial plugin.
  *
  * Usage:
- * - /trial help - Show available commands
- * - /trial info - Show plugin information
- * - /trial reload - Reload plugin configuration
- * - /trial ui - Open the plugin dashboard
+ * - /trial help
+ * - /trial info
+ * - /trial reload
+ * - /trial ui
+ * - /trial start
+ * - /trial accept
+ * - /trial refuse
+ * - /trial status
  */
 public class GoddessTrialPluginCommand extends AbstractCommandCollection {
 
-    public GoddessTrialPluginCommand() {
+    public GoddessTrialPluginCommand(TrialManager trialManager) {
         super("trial", "GoddessTrial plugin commands");
 
-        // Add subcommands
         this.addSubCommand(new HelpSubCommand());
         this.addSubCommand(new InfoSubCommand());
         this.addSubCommand(new ReloadSubCommand());
         this.addSubCommand(new UISubCommand());
+
+        this.addSubCommand(new StartSubCommand(trialManager));
+        this.addSubCommand(new AcceptSubCommand(trialManager));
+        this.addSubCommand(new RefuseSubCommand(trialManager));
+        this.addSubCommand(new StatusSubCommand(trialManager));
     }
 
     @Override
     protected boolean canGeneratePermission() {
-        return false; // No permission required for base command
+        return false;
     }
 }

@@ -11,6 +11,8 @@ import com.example.goddesstrial.listeners.PlayerListener;
 import javax.annotation.Nonnull;
 import java.util.logging.Level;
 
+import com.example.goddesstrial.trial.TrialManager;
+
 /**
  * GoddessTrial - A Hytale server plugin.
  */
@@ -19,9 +21,17 @@ public class GoddessTrialPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static GoddessTrialPlugin instance;
 
+    //Trial fields:
+    private final TrialManager trialManager = new TrialManager();
+
     public GoddessTrialPlugin(@Nonnull JavaPluginInit init) {
         super(init);
         instance = this;
+    }
+
+
+    public TrialManager getTrialManager() {
+        return trialManager;
     }
 
     /**
@@ -50,7 +60,7 @@ public class GoddessTrialPlugin extends JavaPlugin {
      */
     private void registerCommands() {
         try {
-            getCommandRegistry().registerCommand(new GoddessTrialPluginCommand());
+            getCommandRegistry().registerCommand(new GoddessTrialPluginCommand(trialManager));
             LOGGER.at(Level.INFO).log("[GoddessTrial] Registered /trial command");
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register commands");

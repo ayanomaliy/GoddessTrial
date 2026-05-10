@@ -25,10 +25,12 @@ public class HelpSubCommand extends CommandBase {
     protected void executeSync(@Nonnull CommandContext context) {
         context.sendMessage(Message.raw(""));
         context.sendMessage(Message.raw("=== GoddessTrial Commands ==="));
-        context.sendMessage(Message.raw("/trial help - Show this help message"));
+        context.sendMessage(Message.raw("/trial start - Pray and receive the Goddess' offer"));
+        context.sendMessage(Message.raw("/trial accept - Accept the trial"));
+        context.sendMessage(Message.raw("/trial refuse - Refuse the trial"));
+        context.sendMessage(Message.raw("/trial status - Show your current trial state"));
         context.sendMessage(Message.raw("/trial info - Show plugin information"));
-        context.sendMessage(Message.raw("/trial reload - Reload configuration"));
         context.sendMessage(Message.raw("/trial ui - Open the dashboard UI"));
-        context.sendMessage(Message.raw("========================"));
+        context.sendMessage(Message.raw("=============================="));
     }
 }
