@@ -1,0 +1,85 @@
+package com.example.goddesstrial;
+
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.event.EventRegistry;
+import com.hypixel.hytale.logger.HytaleLogger;
+
+import com.example.goddesstrial.commands.GoddessTrialPluginCommand;
+import com.example.goddesstrial.listeners.PlayerListener;
+
+import javax.annotation.Nonnull;
+import java.util.logging.Level;
+
+/**
+ * GoddessTrial - A Hytale server plugin.
+ */
+public class GoddessTrialPlugin extends JavaPlugin {
+
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static GoddessTrialPlugin instance;
+
+    public GoddessTrialPlugin(@Nonnull JavaPluginInit init) {
+        super(init);
+        instance = this;
+    }
+
+    /**
+     * Get the plugin instance.
+     * @return The plugin instance
+     */
+    public static GoddessTrialPlugin getInstance() {
+        return instance;
+    }
+
+    @Override
+    protected void setup() {
+        LOGGER.at(Level.INFO).log("[GoddessTrial] Setting up...");
+
+        // Register commands
+        registerCommands();
+
+        // Register event listeners
+        registerListeners();
+
+        LOGGER.at(Level.INFO).log("[GoddessTrial] Setup complete!");
+    }
+
+    /**
+     * Register plugin commands.
+     */
+    private void registerCommands() {
+        try {
+            getCommandRegistry().registerCommand(new GoddessTrialPluginCommand());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered /trial command");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register commands");
+        }
+    }
+
+    /**
+     * Register event listeners.
+     */
+    private void registerListeners() {
+        EventRegistry eventBus = getEventRegistry();
+
+        try {
+            new PlayerListener().register(eventBus);
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered player event listeners");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register listeners");
+        }
+    }
+
+    @Override
+    protected void start() {
+        LOGGER.at(Level.INFO).log("[GoddessTrial] Started!");
+        LOGGER.at(Level.INFO).log("[GoddessTrial] Use /trial help for commands");
+    }
+
+    @Override
+    protected void shutdown() {
+        LOGGER.at(Level.INFO).log("[GoddessTrial] Shutting down...");
+        instance = null;
+    }
+}

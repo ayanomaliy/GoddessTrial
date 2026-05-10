@@ -1,0 +1,10 @@
+{
+  "Group": "com.example",
+  "Name": "GoddessTrial",
+  "Version": "1.0.0",
+  "Description": "Face the Trial of the Goddess.",
+  "Authors": [{"Name": "ayanomaliy"}],
+  "Main": "com.example.goddesstrial.GoddessTrialPlugin",
+  "LoadOrder": "POSTWORLD",
+  "IncludesAssetPack": true
+}
