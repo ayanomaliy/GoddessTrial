@@ -33,3 +33,6 @@ Thumbs.db
 
 selected_project_files_concatenated.txt
 concatenate-project.ps1
+
+all_sources_concatenated.txt
+concat_sources.ps1
