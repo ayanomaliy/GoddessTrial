@@ -111,7 +111,9 @@ public final class TrialEffects {
      * Checks whether the given item stack is the Blade of Balance.
      */
     public static boolean isBladeOfBalance(ItemStack itemStack) {
-        return itemStack != null;
+        return itemStack != null
+                && !itemStack.isEmpty()
+                && BLADE_ITEM_ID.equals(itemStack.getItemId());
     }
 
     /**
