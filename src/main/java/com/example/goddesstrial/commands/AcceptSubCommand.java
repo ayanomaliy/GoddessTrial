@@ -56,11 +56,12 @@ public class AcceptSubCommand extends AbstractPlayerCommand {
 
             try {
                 TrialEffects.grantBladeOfBalance(player, ref, store);
-                TrialEffects.lockPlayerToOneHp(store, ref);
+                TrialEffects.reducePlayerToOneHp(store, ref);
 
                 context.sendMessage(Message.raw("You received the Blade of Balance."));
                 context.sendMessage(Message.raw("Your life has been reduced to one heart of divine balance."));
-                context.sendMessage(Message.raw("Healing cannot raise you above 1 HP during the trial."));
+                context.sendMessage(Message.raw("Your maximum HP stays unchanged."));
+                context.sendMessage(Message.raw("While the blade is equipped, healing above 1 HP will be punished."));
             } catch (Exception e) {
                 context.sendMessage(Message.raw("Error applying trial effects: " + e.getMessage()));
             }

@@ -7,8 +7,6 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
-import com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.ModifierTarget;
-import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /**
@@ -16,8 +14,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
  *
  * Current prototype features:
  * - gives the player the Blade of Balance
- * - locks max/current health to 1 HP
- * - restores health cap after trial
+ * - reduces current HP to 1 while the blade is equipped
+ * - keeps max HP unchanged
  * - removes the Blade of Balance
  * - clears inventory for debugging via /trial reload
  */
@@ -29,14 +27,15 @@ public final class TrialEffects {
      * Asset file:
      * Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Spectral.json
      */
-    private static final String BLADE_ITEM_ID = "Weapon_Longsword_Spectral";
+    public static final String BLADE_ITEM_ID = "Weapon_Longsword_Spectral";
 
     /**
-     * Unique key for the HP cap modifier.
-     * Used so we can remove exactly our modifier later.
+     * The current HP threshold while the Blade of Balance is equipped.
+     *
+     * Important:
+     * This is NOT a max HP cap. The player keeps their normal max HP.
      */
-    private static final String TRIAL_HEALTH_MODIFIER_KEY =
-            "goddesstrial_blade_of_balance_hp_cap";
+    private static final float BLADE_BALANCE_HP_THRESHOLD = 1.0f;
 
     private TrialEffects() {
         // Utility class
@@ -57,12 +56,12 @@ public final class TrialEffects {
     }
 
     /**
-     * Locks the player to exactly 1 HP.
+     * Reduces the player's current HP to 1, but does not change max HP.
      *
-     * This changes the max health to 1 and also sets current health to 1.
-     * Because max health is capped, normal healing should not raise the player above 1 HP.
+     * Use this when the player first accepts the trial and whenever the blade
+     * is equipped while the player has healed above 1 HP.
      */
-    public static void lockPlayerToOneHp(
+    public static void reducePlayerToOneHp(
             Store<EntityStore> store,
             Ref<EntityStore> playerRef
     ) {
@@ -77,31 +76,14 @@ public final class TrialEffects {
 
         int healthIndex = DefaultEntityStatTypes.getHealth();
 
-        // Prevent duplicate stacking if this method is called multiple times.
-        stats.removeModifier(healthIndex, TRIAL_HEALTH_MODIFIER_KEY);
-
-        float currentMaxHealth = stats.get(healthIndex).getMax();
-
-        // Additive modifier that makes max HP exactly 1.
-        // Example: if max HP is 20, modifier is -19.
-        float modifierAmount = 1.0f - currentMaxHealth;
-
-        StaticModifier maxHpCap = new StaticModifier(
-                ModifierTarget.MAX,
-                StaticModifier.CalculationType.ADDITIVE,
-                modifierAmount
-        );
-
-        stats.putModifier(healthIndex, TRIAL_HEALTH_MODIFIER_KEY, maxHpCap);
-
-        // Force current HP to 1 as well.
-        stats.setStatValue(healthIndex, 1.0f);
+        stats.setStatValue(healthIndex, BLADE_BALANCE_HP_THRESHOLD);
     }
 
     /**
-     * Removes the 1 HP cap and restores the player to full health.
+     * No longer restores a health cap, because the Blade of Balance does not
+     * modify max HP anymore.
      *
-     * Use this when the trial ends, fails, or gets reset.
+     * This method is kept so existing cleanup code still compiles.
      */
     public static void restorePlayerHealthCap(
             Store<EntityStore> store,
@@ -118,10 +100,16 @@ public final class TrialEffects {
 
         int healthIndex = DefaultEntityStatTypes.getHealth();
 
-        stats.removeModifier(healthIndex, TRIAL_HEALTH_MODIFIER_KEY);
-
-        // Restore to full health after removing the cap.
+        // Optional cleanup behavior:
+        // After the trial ends, restore the player to full health.
         stats.maximizeStatValue(healthIndex);
+    }
+
+    /**
+     * Checks whether the given item stack is the Blade of Balance.
+     */
+    public static boolean isBladeOfBalance(ItemStack itemStack) {
+        return itemStack != null;
     }
 
     /**
@@ -140,7 +128,6 @@ public final class TrialEffects {
                     .removeItemStack(blade);
         } catch (Exception ignored) {
             // Prototype fallback.
-            // If exact stack removal fails, /trial reload can still clear inventory.
         }
     }
 

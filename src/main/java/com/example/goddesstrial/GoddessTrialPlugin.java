@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import com.example.goddesstrial.trial.TrialManager;
 import com.example.goddesstrial.listeners.TrialDeathSystem;
 
+import com.example.goddesstrial.listeners.BladeBalanceHealthSystem;
+
 /**
  * GoddessTrial - A Hytale server plugin.
  */
@@ -98,6 +100,13 @@ public class GoddessTrialPlugin extends JavaPlugin {
             LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialDeathSystem");
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialDeathSystem");
+        }
+
+        try {
+            getEntityStoreRegistry().registerSystem(new BladeBalanceHealthSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered BladeBalanceHealthSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register BladeBalanceHealthSystem");
         }
     }
 }
