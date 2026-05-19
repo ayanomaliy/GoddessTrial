@@ -8,6 +8,8 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
+import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 
 /**
  * Applies concrete gameplay effects for the Trial of the Goddess.
@@ -119,15 +121,15 @@ public final class TrialEffects {
      * does not expose a clean non-deprecated inventory-clear/remove method.
      */
     @SuppressWarnings({"removal", "deprecation"})
-    public static void removeBladeOfBalance(Player player) {
-        ItemStack blade = new ItemStack(BLADE_ITEM_ID, 1);
-
-        try {
-            player.getInventory()
-                    .getStorage()
-                    .removeItemStack(blade);
-        } catch (Exception ignored) {
-            // Prototype fallback.
+    public static void clearPlayerInventoryLegacy(Player player) {
+        for (short slot = 0; slot < 200; slot++) {
+            try {
+                player.getInventory()
+                        .getStorage()
+                        .removeItemStackFromSlot(slot);
+            } catch (Exception ignored) {
+                // Some slots may not exist or may already be empty.
+            }
         }
     }
 
@@ -148,5 +150,50 @@ public final class TrialEffects {
                 // Some slots may not exist or may already be empty.
             }
         }
+    }
+
+    /**
+     * Clears the player's actual ECS inventory components.
+     *
+     * This is more reliable than the older Player#getInventory() API because items
+     * such as the Blade of Balance may live in HotbarInventory instead of Storage.
+     */
+    public static void clearPlayerInventory(
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef
+    ) {
+        clearInventoryComponent(store, playerRef, InventoryComponent.Hotbar.getComponentType(), "Hotbar");
+        clearInventoryComponent(store, playerRef, InventoryComponent.Storage.getComponentType(), "Storage");
+        clearInventoryComponent(store, playerRef, InventoryComponent.Backpack.getComponentType(), "Backpack");
+        clearInventoryComponent(store, playerRef, InventoryComponent.Utility.getComponentType(), "Utility");
+        clearInventoryComponent(store, playerRef, InventoryComponent.Tool.getComponentType(), "Tool");
+        clearInventoryComponent(store, playerRef, InventoryComponent.Armor.getComponentType(), "Armor");
+    }
+
+    private static void clearInventoryComponent(
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef,
+            com.hypixel.hytale.component.ComponentType<EntityStore, ? extends InventoryComponent> componentType,
+            String label
+    ) {
+        InventoryComponent inventoryComponent = store.getComponent(playerRef, componentType);
+
+        if (inventoryComponent == null) {
+            return;
+        }
+
+        ItemContainer inventory = inventoryComponent.getInventory();
+
+        if (inventory == null) {
+            return;
+        }
+
+        int removedItems = inventory.removeAllItemStacks().size();
+
+        if (removedItems > 0) {
+            System.out.println("[GoddessTrial] Cleared " + removedItems + " item stack(s) from " + label + ".");
+        }
+
+        inventoryComponent.markDirty();
     }
 }

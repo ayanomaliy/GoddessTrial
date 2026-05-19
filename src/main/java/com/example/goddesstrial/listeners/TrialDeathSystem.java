@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import java.util.logging.Level;
+import com.hypixel.hytale.component.RemoveReason;
 
 /**
  * Proper death listener for the Trial of the Goddess.
@@ -69,13 +70,20 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
         }
 
         try {
-            // Remove trial effects.
-            // For now, use full inventory clear because exact Blade removal is unreliable.
-            TrialEffects.clearPlayerInventory(player);
+            for (Ref<EntityStore> monsterRef : plugin.getTrialManager().consumeSpawnedTrialMonsters(playerName)) {
+                if (monsterRef != null && monsterRef.isValid()) {
+                    commandBuffer.tryRemoveEntity(monsterRef, RemoveReason.REMOVE);
+                }
+            }
+
+            TrialEffects.clearPlayerInventory(store, ref);
+
+            TrialEffects.clearPlayerInventoryLegacy(player);
+
             TrialEffects.restorePlayerHealthCap(store, ref);
 
             LOGGER.at(Level.INFO).log(
-                    "[GoddessTrial] Player %s died. Trial reset, inventory cleared, HP restored.",
+                    "[GoddessTrial] Player %s died. Trial reset, spawned monsters removed, Blade purged, HP restored.",
                     playerName
             );
         } catch (Exception e) {

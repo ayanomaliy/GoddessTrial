@@ -1,6 +1,5 @@
 package com.example.goddesstrial;
 
-import com.example.goddesstrial.listeners.TrialMonsterSpawnSystem;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.event.EventRegistry;
@@ -109,14 +108,5 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register BladeBalanceHealthSystem");
         }
-
-        try {
-            getEntityStoreRegistry().registerSystem(new TrialMonsterSpawnSystem());
-            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialMonsterSpawnSystem");
-        } catch (Exception e) {
-            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialMonsterSpawnSystem");
-        }
-
-
     }
 }

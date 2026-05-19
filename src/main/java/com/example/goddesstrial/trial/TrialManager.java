@@ -2,10 +2,16 @@ package com.example.goddesstrial.trial;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrialManager {
 
     private final Map<String, TrialState> statesByPlayerName = new HashMap<>();
+    private final Map<String, List<Ref<EntityStore>>> spawnedTrialMonstersByPlayerName = new HashMap<>();
 
     public TrialState getOrCreateState(String playerName) {
         return statesByPlayerName.computeIfAbsent(playerName, TrialState::new);
@@ -60,6 +66,7 @@ public class TrialManager {
     public TrialResult resetTrial(String playerName) {
         TrialState state = getOrCreateState(playerName);
         state.setPhase(TrialPhase.NONE);
+        clearSpawnedTrialMonsters(playerName);
         return new TrialResult(true, "Your trial state has been reset.");
     }
 
@@ -74,13 +81,40 @@ public class TrialManager {
 
         // Reset completely so the player must start and accept again.
         state.setPhase(TrialPhase.NONE);
-
         return new TrialResult(true, "You died. The Trial of the Goddess has been reset.");
     }
 
     public TrialResult resetTrialOnJoin(String playerName) {
         TrialState state = getOrCreateState(playerName);
         state.setPhase(TrialPhase.NONE);
+        clearSpawnedTrialMonsters(playerName);
         return new TrialResult(true, "Trial state reset on join.");
+    }
+
+    public void rememberSpawnedTrialMonster(
+            String playerName,
+            Ref<EntityStore> monsterRef
+    ) {
+        if (monsterRef == null) {
+            return;
+        }
+
+        spawnedTrialMonstersByPlayerName
+                .computeIfAbsent(playerName, ignored -> new ArrayList<>())
+                .add(monsterRef);
+    }
+
+    public List<Ref<EntityStore>> consumeSpawnedTrialMonsters(String playerName) {
+        List<Ref<EntityStore>> refs = spawnedTrialMonstersByPlayerName.remove(playerName);
+
+        if (refs == null) {
+            return List.of();
+        }
+
+        return refs;
+    }
+
+    public void clearSpawnedTrialMonsters(String playerName) {
+        spawnedTrialMonstersByPlayerName.remove(playerName);
     }
 }

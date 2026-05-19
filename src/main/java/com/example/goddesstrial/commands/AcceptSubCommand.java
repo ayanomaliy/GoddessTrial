@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialMonsterSpawner;
 
 import javax.annotation.Nonnull;
 
@@ -57,6 +58,7 @@ public class AcceptSubCommand extends AbstractPlayerCommand {
             try {
                 TrialEffects.grantBladeOfBalance(player, ref, store);
                 TrialEffects.reducePlayerToOneHp(store, ref);
+                TrialMonsterSpawner.spawnTrialWave(playerName, store, ref);
 
                 context.sendMessage(Message.raw("You received the Blade of Balance."));
                 context.sendMessage(Message.raw("Your life has been reduced to one heart of divine balance."));

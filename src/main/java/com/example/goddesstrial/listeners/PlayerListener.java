@@ -145,7 +145,8 @@ public class PlayerListener {
 
             // Prototype-safe cleanup:
             // This guarantees the Blade of Balance is gone after reconnect.
-            TrialEffects.clearPlayerInventory(player);
+            TrialEffects.clearPlayerInventory(store, ref);
+            TrialEffects.clearPlayerInventoryLegacy(player);
 
             LOGGER.at(Level.INFO).log(
                     "[GoddessTrial] Restored HP and cleared inventory for %s (%s).",
