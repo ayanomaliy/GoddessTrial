@@ -12,12 +12,11 @@ import com.hypixel.hytale.server.npc.NPCPlugin;
 import java.util.Random;
 
 /**
- * Handles one-time spawning of trial monsters.
+ * Handles trial monster spawning.
  *
- * The trial wave is intentionally chaotic:
- * - many annoying small/flying enemies
- * - several normal enemies
- * - a few giant enemies that are satisfying to one-hit with the Blade of Balance
+ * There are two wave types:
+ * - initial wave: large dramatic wave with flying, small, normal and giant monsters
+ * - reinforcement wave: recurring wave with flying, small and normal monsters only
  */
 public final class TrialMonsterSpawner {
 
@@ -26,11 +25,6 @@ public final class TrialMonsterSpawner {
     private static final double MIN_SPAWN_RADIUS = 12.0;
     private static final double MAX_SPAWN_RADIUS = 28.0;
 
-    /**
-     * Annoying flying enemies.
-     *
-     * These are meant to be hard to hit, visually chaotic, and annoying.
-     */
     private static final String[] FLYING_MONSTERS = {
             "Bat",
             "Bat_Ice",
@@ -44,11 +38,6 @@ public final class TrialMonsterSpawner {
             "Raven"
     };
 
-    /**
-     * Small swarm enemies.
-     *
-     * These add pressure around the player while the flying enemies distract them.
-     */
     private static final String[] SMALL_MONSTERS = {
             "Scarak_Louse",
             "Dungeon_Scarak_Louse",
@@ -62,9 +51,6 @@ public final class TrialMonsterSpawner {
             "Skeleton_Incandescent_Head"
     };
 
-    /**
-     * Normal combat enemies.
-     */
     private static final String[] NORMAL_MONSTERS = {
             "Ghoul",
             "Zombie",
@@ -81,12 +67,6 @@ public final class TrialMonsterSpawner {
             "Outlander_Hunter"
     };
 
-    /**
-     * Giant / dramatic enemies.
-     *
-     * These are the funny "oh no" enemies that should feel ridiculous
-     * when the Blade of Balance one-hits them.
-     */
     private static final String[] GIANT_MONSTERS = {
             "Scarak_Broodmother",
             "Dungeon_Scarak_Broodmother",
@@ -109,14 +89,54 @@ public final class TrialMonsterSpawner {
     }
 
     /**
-     * Spawns a one-time trial monster wave around the player.
+     * Spawns the big initial trial wave.
      *
-     * @param playerName the player currently doing the trial
-     * @param store the entity store
-     * @param playerRef the player entity reference
+     * This includes giant monsters.
      */
     public static void spawnTrialWave(
             String playerName,
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef
+    ) {
+        Vector3d playerPosition = getPlayerPosition(store, playerRef);
+
+        if (playerPosition == null) {
+            return;
+        }
+
+        System.out.println("[GoddessTrial] Spawning initial trial wave around player at " + playerPosition);
+
+        spawnGroup(playerName, store, playerPosition, FLYING_MONSTERS, 12);
+        spawnGroup(playerName, store, playerPosition, SMALL_MONSTERS, 8);
+        spawnGroup(playerName, store, playerPosition, NORMAL_MONSTERS, 5);
+        spawnGroup(playerName, store, playerPosition, GIANT_MONSTERS, 3);
+    }
+
+    /**
+     * Spawns a recurring reinforcement wave.
+     *
+     * This intentionally excludes giant monsters.
+     * If the player ignores the enemies, these waves accumulate over time.
+     */
+    public static void spawnReinforcementWave(
+            String playerName,
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef
+    ) {
+        Vector3d playerPosition = getPlayerPosition(store, playerRef);
+
+        if (playerPosition == null) {
+            return;
+        }
+
+        System.out.println("[GoddessTrial] Spawning reinforcement wave around player at " + playerPosition);
+
+        spawnGroup(playerName, store, playerPosition, FLYING_MONSTERS, 6);
+        spawnGroup(playerName, store, playerPosition, SMALL_MONSTERS, 4);
+        spawnGroup(playerName, store, playerPosition, NORMAL_MONSTERS, 2);
+    }
+
+    private static Vector3d getPlayerPosition(
             Store<EntityStore> store,
             Ref<EntityStore> playerRef
     ) {
@@ -126,34 +146,13 @@ public final class TrialMonsterSpawner {
         );
 
         if (transform == null) {
-            System.out.println("[GoddessTrial] Could not spawn trial wave: player has no TransformComponent.");
-            return;
+            System.out.println("[GoddessTrial] Could not spawn monsters: player has no TransformComponent.");
+            return null;
         }
 
-        Vector3d playerPosition = transform.getPosition();
-
-        System.out.println("[GoddessTrial] Spawning large trial wave around player at " + playerPosition);
-
-        /*
-         * Big chaotic wave:
-         * - 12 flying enemies: annoying, hard to hit, visually chaotic
-         * - 8 small enemies: swarm pressure
-         * - 5 normal enemies: actual combat body
-         * - 3 giants: funny one-hit targets
-         *
-         * Total: 28 enemies.
-         *
-         * If this is too much for performance, reduce flying to 8 and small to 5.
-         */
-        spawnGroup(playerName, store, playerPosition, FLYING_MONSTERS, 12);
-        spawnGroup(playerName, store, playerPosition, SMALL_MONSTERS, 8);
-        spawnGroup(playerName, store, playerPosition, NORMAL_MONSTERS, 5);
-        spawnGroup(playerName, store, playerPosition, GIANT_MONSTERS, 3);
+        return transform.getPosition();
     }
 
-    /**
-     * Spawns several random monsters from one category.
-     */
     private static void spawnGroup(
             String playerName,
             Store<EntityStore> store,
@@ -166,9 +165,6 @@ public final class TrialMonsterSpawner {
         }
     }
 
-    /**
-     * Spawns one random monster from the given list.
-     */
     private static void spawnRandomMonster(
             String playerName,
             Store<EntityStore> store,
@@ -218,9 +214,6 @@ public final class TrialMonsterSpawner {
         }
     }
 
-    /**
-     * Chooses a random position in a ring around the player.
-     */
     private static Vector3d randomPositionAround(Vector3d center) {
         double angle = RANDOM.nextDouble() * Math.PI * 2.0;
         double distance = MIN_SPAWN_RADIUS
