@@ -9,6 +9,8 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.SystemGroup;
 import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -18,29 +20,29 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles Blade of Balance damage behavior.
  *
- * The Blade of Balance only boosts damage when the active trial player is
- * actually holding the Blade item in the selected hotbar slot.
+ * Energy mechanic:
+ * - 3 empowered hits
+ * - then 5 seconds recharge
+ * - during recharge the Blade deals 0 damage
+ * - after recharge the Blade has 3 empowered hits again
  */
 public class DamageSystem extends DamageEventSystem {
 
-    /**
-     * Huge multiplier to make the Blade of Balance one-hit enemies.
-     */
     private static final float BLADE_DAMAGE_MULTIPLIER = 100_000.0f;
-
-    /**
-     * Safety floor in case the original damage is very small.
-     */
     private static final float MINIMUM_BLADE_DAMAGE = 1_000_000.0f;
 
-    /**
-     * Critical:
-     * Run in the Filter Damage Group so the modified damage is applied to HP.
-     */
+    private static final int MAX_BLADE_CHARGES = 3;
+    private static final long RECHARGE_DURATION_MILLIS = 5_000L;
+    private static final long STATUS_MESSAGE_COOLDOWN_MILLIS = 1_000L;
+
+    private static final Map<String, BladeEnergyState> ENERGY_BY_PLAYER_NAME = new HashMap<>();
+
     @Override
     public SystemGroup<EntityStore> getGroup() {
         return DamageModule.get().getFilterDamageGroup();
@@ -94,11 +96,55 @@ public class DamageSystem extends DamageEventSystem {
         String attackerName = attackerPlayerRef.getUsername();
 
         if (plugin.getTrialManager().getPhase(attackerName) != TrialPhase.ACTIVE) {
+            clearBladeEnergy(attackerName);
             return;
         }
 
         if (!isHoldingBladeOfBalance(store, attackerRef)) {
-            System.out.println("[GoddessTrial] Damage not boosted: attacker is not holding Blade of Balance.");
+            return;
+        }
+
+        BladeEnergyState energyState = ENERGY_BY_PLAYER_NAME.computeIfAbsent(
+                attackerName,
+                ignored -> new BladeEnergyState()
+        );
+
+        long now = System.currentTimeMillis();
+
+        if (energyState.shouldFinishRecharge(now)) {
+            energyState.finishRecharge();
+            sendDirectMessage(store, attackerRef, "The Blade of Balance is charged again.");
+        }
+
+        if (energyState.isRecharging(now)) {
+            damage.setAmount(0.0f);
+
+            sendStatusMessageIfAllowed(
+                    store,
+                    attackerRef,
+                    energyState,
+                    now,
+                    "The Blade of Balance is still recharging..."
+            );
+
+            System.out.println(
+                    "[GoddessTrial] Blade hit dealt 0 damage for "
+                            + attackerName
+                            + " because the blade is recharging."
+            );
+            return;
+        }
+
+        if (energyState.getCharges() <= 0) {
+            energyState.startRecharge(now);
+            damage.setAmount(0.0f);
+
+            sendDirectMessage(
+                    store,
+                    attackerRef,
+                    "The Blade of Balance is empty. Recharging for 5 seconds..."
+            );
+
             return;
         }
 
@@ -109,6 +155,27 @@ public class DamageSystem extends DamageEventSystem {
         );
 
         damage.setAmount(boostedDamage);
+        energyState.consumeCharge();
+
+        if (energyState.getCharges() > 0) {
+            String chargeText = energyState.getCharges() == 1
+                    ? "1 empowered hit remains."
+                    : energyState.getCharges() + " empowered hits remain.";
+
+            sendDirectMessage(
+                    store,
+                    attackerRef,
+                    "Blade of Balance empowered hit. " + chargeText
+            );
+        } else {
+            energyState.startRecharge(now);
+
+            sendDirectMessage(
+                    store,
+                    attackerRef,
+                    "The Blade of Balance is empty. Recharging for 5 seconds..."
+            );
+        }
 
         System.out.println(
                 "[GoddessTrial] Blade of Balance boosted damage for "
@@ -117,13 +184,11 @@ public class DamageSystem extends DamageEventSystem {
                         + originalDamage
                         + " -> "
                         + boostedDamage
+                        + " | charges left: "
+                        + energyState.getCharges()
         );
     }
 
-    /**
-     * Checks whether the attacking player currently has the Blade of Balance
-     * selected in the hotbar.
-     */
     private boolean isHoldingBladeOfBalance(
             Store<EntityStore> store,
             Ref<EntityStore> attackerRef
@@ -134,19 +199,111 @@ public class DamageSystem extends DamageEventSystem {
         );
 
         if (hotbar == null) {
-            System.out.println("[GoddessTrial] Damage not boosted: attacker has no hotbar component.");
             return false;
         }
 
         ItemStack activeItem = hotbar.getActiveItem();
 
-        if (activeItem == null || activeItem.isEmpty()) {
-            System.out.println("[GoddessTrial] Damage not boosted: active item is empty.");
-            return false;
+        return TrialEffects.isBladeOfBalance(activeItem);
+    }
+
+    private static void sendStatusMessageIfAllowed(
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef,
+            BladeEnergyState energyState,
+            long now,
+            String message
+    ) {
+        if (now < energyState.getNextStatusMessageMillis()) {
+            return;
         }
 
-        System.out.println("[GoddessTrial] Active item while attacking: " + activeItem.getItemId());
+        sendDirectMessage(store, playerRef, message);
+        energyState.setNextStatusMessageMillis(now + STATUS_MESSAGE_COOLDOWN_MILLIS);
+    }
 
-        return TrialEffects.isBladeOfBalance(activeItem);
+    private static void sendDirectMessage(
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef,
+            String message
+    ) {
+        Player player = store.getComponent(playerRef, Player.getComponentType());
+
+        if (player != null) {
+            player.sendMessage(Message.raw(message));
+        }
+    }
+
+    /**
+     * Called by BladeRechargeNotificationSystem so the player gets a message
+     * exactly when recharge completes, even if they do not attack again.
+     */
+    public static void checkRechargeNotification(
+            String playerName,
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef
+    ) {
+        BladeEnergyState energyState = ENERGY_BY_PLAYER_NAME.get(playerName);
+
+        if (energyState == null) {
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+
+        if (!energyState.shouldFinishRecharge(now)) {
+            return;
+        }
+
+        energyState.finishRecharge();
+        sendDirectMessage(store, playerRef, "The Blade of Balance is charged again.");
+    }
+
+    public static void clearBladeEnergy(String playerName) {
+        ENERGY_BY_PLAYER_NAME.remove(playerName);
+    }
+
+    private static final class BladeEnergyState {
+
+        private int charges = MAX_BLADE_CHARGES;
+        private long rechargeEndMillis = 0L;
+        private long nextStatusMessageMillis = 0L;
+
+        int getCharges() {
+            return charges;
+        }
+
+        long getNextStatusMessageMillis() {
+            return nextStatusMessageMillis;
+        }
+
+        void setNextStatusMessageMillis(long nextStatusMessageMillis) {
+            this.nextStatusMessageMillis = nextStatusMessageMillis;
+        }
+
+        boolean isRecharging(long now) {
+            return rechargeEndMillis > now;
+        }
+
+        boolean shouldFinishRecharge(long now) {
+            return rechargeEndMillis > 0L && now >= rechargeEndMillis;
+        }
+
+        void finishRecharge() {
+            charges = MAX_BLADE_CHARGES;
+            rechargeEndMillis = 0L;
+            nextStatusMessageMillis = 0L;
+        }
+
+        void consumeCharge() {
+            if (charges > 0) {
+                charges--;
+            }
+        }
+
+        void startRecharge(long now) {
+            charges = 0;
+            rechargeEndMillis = now + RECHARGE_DURATION_MILLIS;
+        }
     }
 }
