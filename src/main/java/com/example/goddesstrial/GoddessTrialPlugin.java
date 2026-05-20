@@ -13,6 +13,9 @@ import java.util.logging.Level;
 
 import com.example.goddesstrial.trial.TrialManager;
 
+import com.example.goddesstrial.interactions.GoddessStatueTrialInteraction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+
 /**
  * GoddessTrial - A Hytale server plugin.
  */
@@ -46,11 +49,31 @@ public class GoddessTrialPlugin extends JavaPlugin {
     protected void setup() {
         LOGGER.at(Level.INFO).log("[GoddessTrial] Setting up...");
 
+        registerInteractions();
         registerCommands();
         registerListeners();
         registerSystems();
 
         LOGGER.at(Level.INFO).log("[GoddessTrial] Setup complete!");
+    }
+
+    /**
+     * Register custom GoddessTrial interaction types.
+     */
+    private void registerInteractions() {
+        try {
+            getCodecRegistry(Interaction.CODEC).register(
+                    "GoddessTrial_Statue",
+                    GoddessStatueTrialInteraction.class,
+                    GoddessStatueTrialInteraction.CODEC
+            );
+
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered GoddessTrial_Statue interaction");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING)
+                    .withCause(e)
+                    .log("[GoddessTrial] Failed to register GoddessTrial_Statue interaction");
+        }
     }
 
     /**

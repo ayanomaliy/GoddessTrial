@@ -11,17 +11,17 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.interaction.cooldown.CooldownHandler;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.simple.SimpleInstantInteraction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 
 /**
- * Runs when the player presses the use key on the Goddess statue.
+ * Custom placed-block interaction for the Statue of a Slumbering Deity.
  *
- * This is connected through the statue asset JSON:
+ * This is triggered from the statue asset JSON through:
  *
  * "Type": "GoddessTrial_Statue"
  */
