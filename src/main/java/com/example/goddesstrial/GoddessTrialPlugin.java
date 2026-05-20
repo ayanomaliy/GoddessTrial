@@ -1,21 +1,17 @@
 package com.example.goddesstrial;
 
+import com.example.goddesstrial.listeners.*;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.logger.HytaleLogger;
 
 import com.example.goddesstrial.commands.GoddessTrialPluginCommand;
-import com.example.goddesstrial.listeners.PlayerListener;
 
 import javax.annotation.Nonnull;
 import java.util.logging.Level;
 
 import com.example.goddesstrial.trial.TrialManager;
-import com.example.goddesstrial.listeners.TrialDeathSystem;
-
-import com.example.goddesstrial.listeners.BladeBalanceHealthSystem;
-import com.example.goddesstrial.listeners.DamageSystem;
 
 /**
  * GoddessTrial - A Hytale server plugin.
@@ -81,6 +77,15 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register listeners");
         }
+
+        try {
+            new BlockInspectListener().register(eventBus);
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered block inspect listener");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register block inspect listener");
+        }
+
+
     }
 
     @Override
