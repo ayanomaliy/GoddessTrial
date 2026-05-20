@@ -1,5 +1,6 @@
 package com.example.goddesstrial.trial;
 
+import com.example.goddesstrial.GoddessTrialPlugin;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
@@ -7,50 +8,100 @@ import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
-import com.example.goddesstrial.GoddessTrialPlugin;
 
 import java.util.Random;
 
 /**
  * Handles one-time spawning of trial monsters.
  *
- * This class is intentionally not an EntityTickingSystem.
- * NPCPlugin.spawnNPC creates entities, so it should be called from safe contexts
- * such as commands, dialogue callbacks, statue interaction callbacks, or item interaction callbacks.
+ * The trial wave is intentionally chaotic:
+ * - many annoying small/flying enemies
+ * - several normal enemies
+ * - a few giant enemies that are satisfying to one-hit with the Blade of Balance
  */
 public final class TrialMonsterSpawner {
 
     private static final Random RANDOM = new Random();
 
     private static final double MIN_SPAWN_RADIUS = 12.0;
-    private static final double MAX_SPAWN_RADIUS = 24.0;
+    private static final double MAX_SPAWN_RADIUS = 28.0;
 
     /**
-     * Heavy monsters found from local Hytale assets / server logs.
-     */
-    private static final String[] HEAVY_MONSTERS = {
-            "Golem_Guardian",
-            "Shadow_Knight",
-            "Golem_Firesteel"
-    };
-
-    /**
-     * Temporary flying monster list.
+     * Annoying flying enemies.
      *
-     * Replace these once you find real flying NPC ids.
+     * These are meant to be hard to hit, visually chaotic, and annoying.
      */
     private static final String[] FLYING_MONSTERS = {
-            "Ghoul"
+            "Bat",
+            "Bat_Ice",
+            "Eye_Void",
+            "Wraith",
+            "Wraith_Lantern",
+            "Spark_Living",
+            "Pterodactyl",
+            "Vulture",
+            "Hawk",
+            "Raven"
     };
 
     /**
-     * Smaller / normal enemies.
+     * Small swarm enemies.
+     *
+     * These add pressure around the player while the flying enemies distract them.
      */
     private static final String[] SMALL_MONSTERS = {
+            "Scarak_Louse",
+            "Dungeon_Scarak_Louse",
+            "Larva_Void",
+            "Crawler_Void",
+            "Rat",
+            "Spider",
+            "Spider_Cave",
+            "Scorpion",
+            "Zombie_Aberrant_Small",
+            "Skeleton_Incandescent_Head"
+    };
+
+    /**
+     * Normal combat enemies.
+     */
+    private static final String[] NORMAL_MONSTERS = {
             "Ghoul",
-            "Skeleton_Incandescent_Fighter",
-            "Skeleton_Incandescent_Mage",
-            "Skeleton_Knight"
+            "Zombie",
+            "Zombie_Burnt",
+            "Zombie_Frost",
+            "Zombie_Sand",
+            "Skeleton_Fighter",
+            "Skeleton_Knight",
+            "Skeleton_Mage",
+            "Skeleton_Ranger",
+            "Goblin_Scrapper",
+            "Goblin_Lobber",
+            "Outlander_Stalker",
+            "Outlander_Hunter"
+    };
+
+    /**
+     * Giant / dramatic enemies.
+     *
+     * These are the funny "oh no" enemies that should feel ridiculous
+     * when the Blade of Balance one-hits them.
+     */
+    private static final String[] GIANT_MONSTERS = {
+            "Scarak_Broodmother",
+            "Dungeon_Scarak_Broodmother",
+            "Goblin_Ogre",
+            "Golem_Firesteel",
+            "Golem_Crystal_Earth",
+            "Golem_Crystal_Flame",
+            "Golem_Crystal_Frost",
+            "Golem_Crystal_Sand",
+            "Golem_Crystal_Thunder",
+            "Zombie_Aberrant_Big",
+            "Yeti",
+            "Rex_Cave",
+            "Dragon_Fire",
+            "Dragon_Frost"
     };
 
     private TrialMonsterSpawner() {
@@ -60,6 +111,7 @@ public final class TrialMonsterSpawner {
     /**
      * Spawns a one-time trial monster wave around the player.
      *
+     * @param playerName the player currently doing the trial
      * @param store the entity store
      * @param playerRef the player entity reference
      */
@@ -80,19 +132,37 @@ public final class TrialMonsterSpawner {
 
         Vector3d playerPosition = transform.getPosition();
 
-        System.out.println("[GoddessTrial] Spawning trial wave around player at " + playerPosition);
+        System.out.println("[GoddessTrial] Spawning large trial wave around player at " + playerPosition);
 
-        // Several normal/small enemies
-        spawnRandomMonster(playerName, store, playerPosition, SMALL_MONSTERS);
-        spawnRandomMonster(playerName, store, playerPosition, SMALL_MONSTERS);
-        spawnRandomMonster(playerName, store, playerPosition, SMALL_MONSTERS);
+        /*
+         * Big chaotic wave:
+         * - 12 flying enemies: annoying, hard to hit, visually chaotic
+         * - 8 small enemies: swarm pressure
+         * - 5 normal enemies: actual combat body
+         * - 3 giants: funny one-hit targets
+         *
+         * Total: 28 enemies.
+         *
+         * If this is too much for performance, reduce flying to 8 and small to 5.
+         */
+        spawnGroup(playerName, store, playerPosition, FLYING_MONSTERS, 12);
+        spawnGroup(playerName, store, playerPosition, SMALL_MONSTERS, 8);
+        spawnGroup(playerName, store, playerPosition, NORMAL_MONSTERS, 5);
+        spawnGroup(playerName, store, playerPosition, GIANT_MONSTERS, 3);
+    }
 
-        spawnRandomMonster(playerName, store, playerPosition, FLYING_MONSTERS);
-
-        spawnRandomMonster(playerName, store, playerPosition, HEAVY_MONSTERS);
-
-        if (RANDOM.nextDouble() < 0.50) {
-            spawnRandomMonster(playerName, store, playerPosition, HEAVY_MONSTERS);
+    /**
+     * Spawns several random monsters from one category.
+     */
+    private static void spawnGroup(
+            String playerName,
+            Store<EntityStore> store,
+            Vector3d playerPosition,
+            String[] possibleMonsters,
+            int amount
+    ) {
+        for (int i = 0; i < amount; i++) {
+            spawnRandomMonster(playerName, store, playerPosition, possibleMonsters);
         }
     }
 
