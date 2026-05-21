@@ -42,7 +42,7 @@ public class TrialMonsterCleanupSystem extends EntityTickingSystem<EntityStore> 
     /*
      * Keep cleanup alive long enough for nearby entities/chunks to tick.
      */
-    private static final long CLEANUP_DURATION_MILLIS = 60_000L;
+    private static final long CLEANUP_DURATION_MILLIS = 5_000L;
 
     public static void requestCleanup(String playerName) {
         if (playerName != null && !playerName.isBlank()) {

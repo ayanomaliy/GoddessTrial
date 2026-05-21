@@ -165,12 +165,26 @@ public class GoddessTrialPlugin extends JavaPlugin {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialMonsterCleanupSystem");
         }
 
-        try {
-            getEntityStoreRegistry().registerSystem(new TrialReinforcementSpawnSystem());
-            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialReinforcementSpawnSystem");
-        } catch (Exception e) {
-            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialReinforcementSpawnSystem");
-        }
+//        try {
+//            getEntityStoreRegistry().registerSystem(new TrialReinforcementSpawnSystem());
+//            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialReinforcementSpawnSystem");
+//        } catch (Exception e) {
+//            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialReinforcementSpawnSystem");
+//        }
+
+        /*
+         * Disabled for now.
+         *
+         * TrialReinforcementSpawnSystem calls NPCPlugin.spawnNPC from inside an
+         * EntityTickingSystem tick. Hytale rejects that with:
+         *
+         * "Store is currently processing! Ensure you aren't calling a store method from a system."
+         *
+         * Initial monster spawning still works because TrialStarter calls it from the
+         * player interaction/command flow after the flower has spawned.
+         */
+        LOGGER.at(Level.INFO).log("[GoddessTrial] TrialReinforcementSpawnSystem disabled for now");
+
 
         try {
             getEntityStoreRegistry().registerSystem(new GoddessCompletionSequenceSystem());

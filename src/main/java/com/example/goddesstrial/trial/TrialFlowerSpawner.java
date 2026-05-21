@@ -11,14 +11,13 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import java.util.List;
+
 /**
  * Spawns and removes the Sacred Flower objective.
  *
- * New approach:
- * - The world/map is fixed.
- * - Valid Sacred Flower locations are manually defined in SacredFlowerPositions.json.
- * - The plugin randomly picks one configured position.
- * - No terrain scanning, no random Y detection, no fallback guessing.
+ * The visible world block is a normal purple orchid.
+ * It becomes the Sacred Flower because the TrialManager remembers its exact position.
  */
 public final class TrialFlowerSpawner {
 
@@ -28,7 +27,7 @@ public final class TrialFlowerSpawner {
     private TrialFlowerSpawner() {
     }
 
-    public static void spawnSacredFlower(
+    public static boolean spawnSacredFlower(
             String playerName,
             Store<EntityStore> store,
             Ref<EntityStore> playerRef
@@ -37,54 +36,76 @@ public final class TrialFlowerSpawner {
 
         if (player == null) {
             System.out.println("[GoddessTrial] Could not place Sacred Flower: player component was null.");
-            return;
+            return false;
         }
 
         EntityStore entityStore = store.getExternalData();
         World world = entityStore.getWorld();
 
-        Vector3d flowerPosition = SacredFlowerPositionConfig.pickRandomPosition();
+        List<SacredFlowerPositionConfig.ConfiguredFlowerPosition> positions =
+                SacredFlowerPositionConfig.getShuffledPositions();
 
-        if (flowerPosition == null) {
+        if (positions.isEmpty()) {
             player.sendMessage(Message.raw("The Sacred Flower has no known place to bloom."));
             System.out.println("[GoddessTrial] Could not place Sacred Flower: no configured position was available.");
-            return;
+            return false;
         }
 
-        int x = (int) Math.floor(flowerPosition.getX());
-        int y = (int) Math.floor(flowerPosition.getY());
-        int z = (int) Math.floor(flowerPosition.getZ());
+        for (SacredFlowerPositionConfig.ConfiguredFlowerPosition configuredPosition : positions) {
+            Vector3d flowerPosition = configuredPosition.position();
 
-        boolean placed = placeFlowerBlock(world, x, y, z);
+            int x = (int) Math.floor(flowerPosition.getX());
+            int y = (int) Math.floor(flowerPosition.getY());
+            int z = (int) Math.floor(flowerPosition.getZ());
 
-        if (!placed) {
-            player.sendMessage(Message.raw("The Sacred Flower tried to bloom, but the veil rejected its chosen place."));
-            System.out.println("[GoddessTrial] Failed to place Sacred Flower at " + x + ", " + y + ", " + z);
-            return;
+            System.out.println(
+                    "[GoddessTrial] Trying Sacred Flower position: "
+                            + configuredPosition.name()
+                            + " at "
+                            + x + ", " + y + ", " + z
+            );
+
+            boolean placed = placeFlowerBlock(world, x, y, z);
+
+            if (!placed) {
+                System.out.println(
+                        "[GoddessTrial] Rejected Sacred Flower position: "
+                                + configuredPosition.name()
+                                + " at "
+                                + x + ", " + y + ", " + z
+                );
+                continue;
+            }
+
+            Vector3d actualFlowerPosition = new Vector3d(x, y, z);
+
+            GoddessTrialPlugin plugin = GoddessTrialPlugin.getInstance();
+
+            if (plugin != null) {
+                plugin.getTrialManager().rememberSacredFlowerPosition(playerName, actualFlowerPosition);
+            }
+
+            player.sendMessage(Message.raw(
+                    "Somewhere beyond the veil, the Sacred Flower begins to bloom."
+            ));
+
+            player.sendMessage(Message.raw(
+                    "Debug Sacred Flower position: " + x + ", " + y + ", " + z
+            ));
+
+            System.out.println(
+                    "[GoddessTrial] Placed Sacred Flower for "
+                            + playerName
+                            + " at "
+                            + x + ", " + y + ", " + z
+            );
+
+            return true;
         }
 
-        Vector3d actualFlowerPosition = new Vector3d(x, y, z);
-
-        GoddessTrialPlugin plugin = GoddessTrialPlugin.getInstance();
-
-        if (plugin != null) {
-            plugin.getTrialManager().rememberSacredFlowerPosition(playerName, actualFlowerPosition);
-        }
-
-        player.sendMessage(Message.raw(
-                "Somewhere beyond the veil, the Sacred Flower begins to bloom."
-        ));
-
-        player.sendMessage(Message.raw(
-                "Debug Sacred Flower position: " + x + ", " + y + ", " + z
-        ));
-
-        System.out.println(
-                "[GoddessTrial] Placed Sacred Flower for "
-                        + playerName
-                        + " at "
-                        + x + ", " + y + ", " + z
-        );
+        player.sendMessage(Message.raw("The Sacred Flower tried to bloom, but the veil rejected every chosen place."));
+        System.out.println("[GoddessTrial] Failed to place Sacred Flower at all configured positions.");
+        return false;
     }
 
     private static boolean placeFlowerBlock(World world, int x, int y, int z) {

@@ -80,6 +80,11 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
         String playerName = playerRef.getUsername();
         TrialManager trialManager = plugin.getTrialManager();
 
+        if (trialManager.isMonsterCleanupPending(playerName)) {
+            player.sendMessage(Message.raw("The statue remains cold and silent beneath your hands."));
+            return;
+        }
+
         if (GoddessDialogueSequenceSystem.isDialoguePlaying(playerName)) {
             GoddessDialogueSequenceSystem.skipDialogueToOfferUi(
                     playerName,

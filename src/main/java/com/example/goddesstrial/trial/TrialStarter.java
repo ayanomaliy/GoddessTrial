@@ -7,18 +7,10 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /**
  * Starts the actual Trial of the Goddess gameplay.
- *
- * This class is intentionally independent from commands.
- * It can be called from:
- * - /trial accept for testing
- * - statue interaction later
- * - dialogue choice later
- * - item interaction later
  */
 public final class TrialStarter {
 
     private TrialStarter() {
-        // Utility class
     }
 
     public static TrialStartResult startTrial(
@@ -28,6 +20,13 @@ public final class TrialStarter {
             Ref<EntityStore> playerRef,
             Store<EntityStore> store
     ) {
+        if (trialManager.isMonsterCleanupPending(playerName)) {
+            return new TrialStartResult(
+                    false,
+                    "The remains of your previous trial are still fading. Wait a moment, then try again."
+            );
+        }
+
         TrialManager.TrialResult result = trialManager.acceptTrial(playerName);
 
         if (!result.success()) {
@@ -37,12 +36,26 @@ public final class TrialStarter {
         TrialInventoryUtil.removeBladeOfBalance(player, store, playerRef);
         TrialInventoryUtil.removeSacredFlower(player, store, playerRef);
 
+        boolean flowerSpawned = TrialFlowerSpawner.spawnSacredFlower(
+                playerName,
+                store,
+                playerRef
+        );
+
+        if (!flowerSpawned) {
+            trialManager.resetTrial(playerName);
+
+            return new TrialStartResult(
+                    false,
+                    "The trial could not begin because the Sacred Flower could not bloom."
+            );
+        }
+
         TrialEffects.grantBladeOfBalance(player, playerRef, store);
         GoddessSoundUtil.playBladeReceived(playerRef, store);
 
         TrialEffects.reducePlayerToOneHp(store, playerRef);
         TrialMonsterSpawner.spawnTrialWave(playerName, store, playerRef);
-        TrialFlowerSpawner.spawnSacredFlower(playerName, store, playerRef);
 
         return new TrialStartResult(
                 true,

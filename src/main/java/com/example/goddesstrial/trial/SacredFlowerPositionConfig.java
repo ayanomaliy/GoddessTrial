@@ -7,6 +7,8 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,25 +26,34 @@ public final class SacredFlowerPositionConfig {
     }
 
     public static Vector3d pickRandomPosition() {
+        List<ConfiguredFlowerPosition> positions = getShuffledPositions();
+
+        if (positions.isEmpty()) {
+            return null;
+        }
+
+        return positions.getFirst().position();
+    }
+
+    public static List<ConfiguredFlowerPosition> getShuffledPositions() {
         FlowerPositionsFile file = load();
 
         if (file == null || file.positions == null || file.positions.isEmpty()) {
             System.out.println("[GoddessTrial] No Sacred Flower positions configured.");
-            return null;
+            return List.of();
         }
 
-        FlowerPosition position = file.positions.get(
-                RANDOM.nextInt(file.positions.size())
-        );
+        List<ConfiguredFlowerPosition> positions = new ArrayList<>();
 
-        System.out.println(
-                "[GoddessTrial] Picked Sacred Flower position: "
-                        + position.name
-                        + " at "
-                        + position.x + ", " + position.y + ", " + position.z
-        );
+        for (FlowerPosition position : file.positions) {
+            positions.add(new ConfiguredFlowerPosition(
+                    position.name,
+                    new Vector3d(position.x, position.y, position.z)
+            ));
+        }
 
-        return new Vector3d(position.x, position.y, position.z);
+        Collections.shuffle(positions, RANDOM);
+        return positions;
     }
 
     private static FlowerPositionsFile load() {
@@ -66,6 +77,8 @@ public final class SacredFlowerPositionConfig {
             return null;
         }
     }
+
+    public record ConfiguredFlowerPosition(String name, Vector3d position) {}
 
     private static final class FlowerPositionsFile {
         @SerializedName("Positions")
