@@ -14,25 +14,17 @@ pom.xml.versionsBackup
 !.idea/runConfigurations/
 *.iml
 
-# Hytale
-libs/HytaleServer.jar
-server/mods/
-server/logs/
-server/world/
-
-
-# Hytale local server/game files
-server/
-*.zip
-server/HytaleServer.jar
-server/Assets.zip
+# Hytale server JAR / local runtime files
+/libs/HytaleServer.jar
+/server/
+/*.zip
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Generated concatenation/debug files
 selected_project_files_concatenated.txt
 concatenate-project.ps1
-
 all_sources_concatenated.txt
 concat_sources.ps1
