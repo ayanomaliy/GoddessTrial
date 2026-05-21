@@ -1,7 +1,8 @@
 package com.example.goddesstrial.listeners;
 
 import com.example.goddesstrial.GoddessTrialPlugin;
-import com.example.goddesstrial.trial.TrialEffects;
+import com.example.goddesstrial.trial.TrialFlowerSpawner;
+import com.example.goddesstrial.trial.TrialInventoryUtil;
 import com.example.goddesstrial.trial.TrialManager;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -22,13 +23,9 @@ import java.util.logging.Level;
 /**
  * Handles trial cleanup when the player dies.
  *
- * Death is represented by DeathComponent being added to the player entity.
- * On death:
- * - cancel the trial
- * - remove all tracked trial monsters
- * - clear the Blade of Balance
- * - restore player health
- * - clear Blade recharge state
+ * Important:
+ * Do not force HP restoration here. Hytale's own death/respawn system should
+ * handle death state. We only remove trial items and schedule monster cleanup.
  */
 public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
 
@@ -76,6 +73,10 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
         }
 
         try {
+            TrialFlowerSpawner.removeStoredSacredFlower(playerName, store);
+
+            TrialMonsterCleanupSystem.requestCleanup(playerName);
+
             List<Ref<EntityStore>> spawnedMonsters =
                     plugin.getTrialManager().consumeSpawnedTrialMonsters(playerName);
 
@@ -93,14 +94,13 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
                 scheduledRemovalCount++;
             }
 
-            TrialEffects.clearPlayerInventory(store, ref);
-            TrialEffects.clearPlayerInventoryLegacy(player);
-            TrialEffects.restorePlayerHealthCap(store, ref);
+            TrialInventoryUtil.removeBladeOfBalance(player, store, ref);
+            TrialInventoryUtil.removeSacredFlower(player, store, ref);
 
             DamageSystem.clearBladeEnergy(playerName);
 
             LOGGER.at(Level.INFO).log(
-                    "[GoddessTrial] Player %s died. Trial reset. Tracked monsters: %s, scheduled removals: %s, invalid refs: %s.",
+                    "[GoddessTrial] Player %s died. Trial failed. Tracked monsters: %s, scheduled removals: %s, invalid refs: %s.",
                     playerName,
                     trackedCount,
                     scheduledRemovalCount,
@@ -108,7 +108,7 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
             );
 
             LOGGER.at(Level.INFO).log(
-                    "[GoddessTrial] Blade purged, HP restored, Blade energy cleared for %s.",
+                    "[GoddessTrial] Trial items removed and Blade energy cleared for %s.",
                     playerName
             );
         } catch (Exception e) {

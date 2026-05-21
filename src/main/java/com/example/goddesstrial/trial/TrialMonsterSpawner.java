@@ -316,6 +316,7 @@ public final class TrialMonsterSpawner {
 
             if (plugin != null) {
                 plugin.getTrialManager().rememberSpawnedTrialMonster(playerName, monsterRef);
+                plugin.getTrialManager().rememberSpawnedTrialMonsterPosition(playerName, spawnPosition);
             }
 
             System.out.println(
@@ -355,5 +356,9 @@ public final class TrialMonsterSpawner {
         double z = center.z + Math.sin(angle) * distance;
 
         return new Vector3d(x, center.y, z);
+    }
+
+    public static Vector3d randomObjectiveCenterNearCombat(Vector3d center) {
+        return randomClusterCenterAround(center);
     }
 }

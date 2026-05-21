@@ -24,7 +24,6 @@ public class GoddessTrialPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static GoddessTrialPlugin instance;
 
-    //Trial fields:
     private final TrialManager trialManager = new TrialManager();
 
     public GoddessTrialPlugin(@Nonnull JavaPluginInit init) {
@@ -32,15 +31,10 @@ public class GoddessTrialPlugin extends JavaPlugin {
         instance = this;
     }
 
-
     public TrialManager getTrialManager() {
         return trialManager;
     }
 
-    /**
-     * Get the plugin instance.
-     * @return The plugin instance
-     */
     public static GoddessTrialPlugin getInstance() {
         return instance;
     }
@@ -57,9 +51,6 @@ public class GoddessTrialPlugin extends JavaPlugin {
         LOGGER.at(Level.INFO).log("[GoddessTrial] Setup complete!");
     }
 
-    /**
-     * Register custom GoddessTrial interaction types.
-     */
     private void registerInteractions() {
         try {
             getCodecRegistry(Interaction.CODEC).register(
@@ -76,9 +67,6 @@ public class GoddessTrialPlugin extends JavaPlugin {
         }
     }
 
-    /**
-     * Register plugin commands.
-     */
     private void registerCommands() {
         try {
             getCommandRegistry().registerCommand(new GoddessTrialPluginCommand(trialManager));
@@ -88,9 +76,6 @@ public class GoddessTrialPlugin extends JavaPlugin {
         }
     }
 
-    /**
-     * Register event listeners.
-     */
     private void registerListeners() {
         EventRegistry eventBus = getEventRegistry();
 
@@ -107,8 +92,6 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register block inspect listener");
         }
-
-
     }
 
     @Override
@@ -120,6 +103,15 @@ public class GoddessTrialPlugin extends JavaPlugin {
     @Override
     protected void shutdown() {
         LOGGER.at(Level.INFO).log("[GoddessTrial] Shutting down...");
+
+        try {
+            trialManager.failAllOngoingTrialsBecauseServerIsStopping();
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING)
+                    .withCause(e)
+                    .log("[GoddessTrial] Failed to mark ongoing trials as failed during shutdown.");
+        }
+
         instance = null;
     }
 
@@ -129,6 +121,13 @@ public class GoddessTrialPlugin extends JavaPlugin {
             LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialDeathSystem");
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialDeathSystem");
+        }
+
+        try {
+            getEntityStoreRegistry().registerSystem(new TrialJoinCleanupSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialJoinCleanupSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialJoinCleanupSystem");
         }
 
         try {
@@ -144,6 +143,7 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register DamageSystem");
         }
+
         try {
             getEntityStoreRegistry().registerSystem(new BladeRechargeNotificationSystem());
             LOGGER.at(Level.INFO).log("[GoddessTrial] Registered BladeRechargeNotificationSystem");
@@ -157,12 +157,21 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register GoddessDialogueSequenceSystem");
         }
+
         try {
             getEntityStoreRegistry().registerSystem(new TrialMonsterCleanupSystem());
             LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialMonsterCleanupSystem");
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialMonsterCleanupSystem");
         }
+
+        try {
+            getEntityStoreRegistry().registerSystem(new TrialReinforcementSpawnSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialReinforcementSpawnSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialReinforcementSpawnSystem");
+        }
+
         try {
             getEntityStoreRegistry().registerSystem(new GoddessCompletionSequenceSystem());
             LOGGER.at(Level.INFO).log("[GoddessTrial] Registered GoddessCompletionSequenceSystem");

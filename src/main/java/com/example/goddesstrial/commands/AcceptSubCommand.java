@@ -1,7 +1,7 @@
 package com.example.goddesstrial.commands;
 
-import com.example.goddesstrial.trial.TrialEffects;
 import com.example.goddesstrial.trial.TrialManager;
+import com.example.goddesstrial.trial.TrialStarter;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -11,7 +11,6 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.example.goddesstrial.trial.TrialMonsterSpawner;
 
 import javax.annotation.Nonnull;
 
@@ -38,35 +37,30 @@ public class AcceptSubCommand extends AbstractPlayerCommand {
             @Nonnull PlayerRef playerRef,
             @Nonnull World world
     ) {
+        Player player = store.getComponent(ref, Player.getComponentType());
+
+        if (player == null) {
+            context.sendMessage(Message.raw("Error: Could not access player component."));
+            return;
+        }
+
         String playerName = playerRef.getUsername();
 
-        TrialManager.TrialResult result = trialManager.acceptTrial(playerName);
+        TrialStarter.TrialStartResult result =
+                TrialStarter.startTrial(
+                        trialManager,
+                        playerName,
+                        player,
+                        ref,
+                        store
+                );
 
         context.sendMessage(Message.raw(""));
         context.sendMessage(Message.raw("=== Trial of the Goddess ==="));
         context.sendMessage(Message.raw(result.message()));
 
         if (result.success()) {
-            Player player = store.getComponent(ref, Player.getComponentType());
-
-            if (player == null) {
-                context.sendMessage(Message.raw("Error: Could not access player component."));
-                context.sendMessage(Message.raw("==========================="));
-                return;
-            }
-
-            try {
-                TrialEffects.grantBladeOfBalance(player, ref, store);
-                TrialEffects.reducePlayerToOneHp(store, ref);
-                TrialMonsterSpawner.spawnTrialWave(playerName, store, ref);
-
-                context.sendMessage(Message.raw("You received the Blade of Balance."));
-                context.sendMessage(Message.raw("Your life has been reduced to one heart of divine balance."));
-                context.sendMessage(Message.raw("Your maximum HP stays unchanged."));
-                context.sendMessage(Message.raw("While the blade is equipped, healing above 1 HP will be punished."));
-            } catch (Exception e) {
-                context.sendMessage(Message.raw("Error applying trial effects: " + e.getMessage()));
-            }
+            context.sendMessage(Message.raw("\"Then wake the blade, and let balance judge you.\""));
         }
 
         context.sendMessage(Message.raw("==========================="));

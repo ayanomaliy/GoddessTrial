@@ -34,6 +34,9 @@ public final class TrialStarter {
             return new TrialStartResult(false, result.message());
         }
 
+        TrialInventoryUtil.removeBladeOfBalance(player, store, playerRef);
+        TrialInventoryUtil.removeSacredFlower(player, store, playerRef);
+
         TrialEffects.grantBladeOfBalance(player, playerRef, store);
         GoddessSoundUtil.playBladeReceived(playerRef, store);
 

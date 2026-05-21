@@ -180,4 +180,26 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
         private int pageIndex = 0;
         private float elapsedSeconds = INTRO_LINE_DELAY_SECONDS;
     }
+
+    public static boolean isDialoguePlaying(String playerName) {
+        return STATES_BY_PLAYER_NAME.containsKey(playerName);
+    }
+
+    public static void skipDialogueToOfferUi(
+            String playerName,
+            PlayerRef playerRef,
+            Player player,
+            Ref<EntityStore> ref,
+            Store<EntityStore> store
+    ) {
+        STATES_BY_PLAYER_NAME.remove(playerName);
+
+        EventTitleUtil.hideEventTitleFromPlayer(playerRef, 0.2f);
+
+        player.getPageManager().openCustomPage(
+                ref,
+                store,
+                new TrialOfferPage(playerRef)
+        );
+    }
 }

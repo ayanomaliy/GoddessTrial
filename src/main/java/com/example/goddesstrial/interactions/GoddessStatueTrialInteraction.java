@@ -80,6 +80,17 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
         String playerName = playerRef.getUsername();
         TrialManager trialManager = plugin.getTrialManager();
 
+        if (GoddessDialogueSequenceSystem.isDialoguePlaying(playerName)) {
+            GoddessDialogueSequenceSystem.skipDialogueToOfferUi(
+                    playerName,
+                    playerRef,
+                    player,
+                    playerEntityRef,
+                    store
+            );
+            return;
+        }
+
         if (trialManager.getPhase(playerName) == TrialPhase.ACTIVE) {
             if (TrialInventoryUtil.hasSacredFlower(player, store, playerEntityRef)) {
                 TrialCompletion.completeTrial(
