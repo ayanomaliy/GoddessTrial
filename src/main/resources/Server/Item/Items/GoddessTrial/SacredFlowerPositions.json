@@ -1,0 +1,58 @@
+{
+  "Positions": [
+    {
+      "Name": "Sacred Flower Spot 1",
+      "X": -547,
+      "Y": 123,
+      "Z": 399
+    },
+    {
+      "Name": "Sacred Flower Spot 2",
+      "X": -560,
+      "Y": 122,
+      "Z": 385
+    },
+    {
+      "Name": "Sacred Flower Spot 3",
+      "X": -561,
+      "Y": 116,
+      "Z": 353
+    },
+    {
+      "Name": "Sacred Flower Spot 4",
+      "X": -601,
+      "Y": 116,
+      "Z": 349
+    },
+    {
+      "Name": "Sacred Flower Spot 5",
+      "X": -620,
+      "Y": 117,
+      "Z": 337
+    },
+    {
+      "Name": "Sacred Flower Spot 6",
+      "X": -640,
+      "Y": 116,
+      "Z": 332
+    },
+    {
+      "Name": "Sacred Flower Spot 7",
+      "X": -649,
+      "Y": 115,
+      "Z": 378
+    },
+    {
+      "Name": "Sacred Flower Spot 8",
+      "X": -637,
+      "Y": 117,
+      "Z": 390
+    },
+    {
+      "Name": "Sacred Flower Spot 9",
+      "X": -606,
+      "Y": 121,
+      "Z": 396
+    }
+  ]
+}

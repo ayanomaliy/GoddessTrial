@@ -153,4 +153,18 @@ public class GoddessChoiceSequenceSystem extends EntityTickingSystem<EntityStore
             this.afterChatLines = afterChatLines;
         }
     }
+
+    public static void startReturnWithoutFlowerDialogue(String playerName) {
+        if (playerName == null || playerName.isBlank()) {
+            return;
+        }
+
+        STATES_BY_PLAYER_NAME.put(
+                playerName,
+                new ChoiceState(
+                        GoddessDialogueScript.RETURN_WITHOUT_FLOWER_PAGES,
+                        null
+                )
+        );
+    }
 }

@@ -62,7 +62,9 @@ public class BladeBalanceHealthSystem extends EntityTickingSystem<EntityStore> {
 
         String playerName = playerRef.getUsername();
 
-        if (plugin.getTrialManager().getPhase(playerName) != TrialPhase.ACTIVE) {
+        TrialPhase phase = plugin.getTrialManager().getPhase(playerName);
+
+        if (phase != TrialPhase.ACTIVE && phase != TrialPhase.COMPLETED) {
             return;
         }
 

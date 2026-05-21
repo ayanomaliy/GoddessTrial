@@ -30,7 +30,7 @@ public final class GoddessDialogueScript {
 
             page("It is the last piece of myself."),
 
-            page("Bring it back to me, and I may finally slumber whole."),
+            page("Bring it to me, and I may finally slumber whole."),
 
             page("Take my weapon, and cross the veil."),
 
@@ -46,7 +46,13 @@ public final class GoddessDialogueScript {
 
             page("Thank you, little wanderer."),
 
-            page("Now I may slumber."),
+            page("I have no need for the blade anymore."),
+
+            page("Keep it, as a sign of my gratitude."),
+
+            page("May its balance guard your path."),
+
+            page("Now... I may slumber.")
     };
 
     public static final String[] COMPLETION_AFTER_CHAT_LINES = {
@@ -64,6 +70,14 @@ public final class GoddessDialogueScript {
 
     public static final String[] REFUSED_AFTER_CHAT_LINES = {
             "The stone grows cold beneath your hand."
+    };
+
+    public static final GoddessDialoguePage[] RETURN_WITHOUT_FLOWER_PAGES = {
+            page("The statue grows warm beneath your hand."),
+
+            page("The Sacred Flower is not with you."),
+
+            page("Return beyond the veil, little wanderer.")
     };
 
     private static GoddessDialoguePage page(String title) {

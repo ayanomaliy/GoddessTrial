@@ -24,10 +24,25 @@ public final class TrialCompletion {
             Ref<EntityStore> playerRef,
             Store<EntityStore> store
     ) {
+        /*
+         * The Sacred Flower belongs to the Goddess and disappears when the trial is
+         * completed.
+         */
         TrialInventoryUtil.removeSacredFlower(player, store, playerRef);
-        TrialInventoryUtil.removeBladeOfBalance(player, store, playerRef);
 
-        TrialEffects.restorePlayerHealthCap(store, playerRef);
+        /*
+         * Important:
+         * Do NOT remove the Blade of Balance here.
+         *
+         * After the Goddess becomes whole, she no longer needs the blade and leaves
+         * it behind as the player's reward.
+         */
+
+        /*
+         * Keep the Blade energy clean after the trial ends.
+         * The post-trial Blade may still keep its HP curse, but the trial combat
+         * charge mechanic should not remain stuck in an old state.
+         */
         DamageSystem.clearBladeEnergy(playerName);
 
         trialManager.completeTrial(playerName);
@@ -38,11 +53,13 @@ public final class TrialCompletion {
          * them on the next tick.
          */
         TrialMonsterCleanupSystem.requestCleanup(playerName);
+
         player.sendMessage(Message.raw(""));
 
         for (String line : GoddessDialogueScript.COMPLETION_CHAT_LINES) {
             player.sendMessage(Message.raw(line));
         }
+
 
         GoddessCompletionSequenceSystem.startCompletionDialogue(playerName);
     }

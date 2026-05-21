@@ -40,12 +40,52 @@ public class TrialManager {
                 continue;
             }
 
-            /*
-             * New rule:
-             * We never resume ACTIVE/OFFERED/COMPLETED trials after server restart.
-             * Saved trial data only exists so cleanup can happen.
-             */
             TrialState state = getOrCreateState(playerName);
+
+            TrialPhase savedPhase = TrialPhase.NONE;
+
+            try {
+                if (saved.phase != null) {
+                    savedPhase = TrialPhase.valueOf(saved.phase);
+                }
+            } catch (IllegalArgumentException ignored) {
+                savedPhase = TrialPhase.NONE;
+            }
+
+            /*
+             * COMPLETED is now permanent:
+             * the Goddess is gone, the player keeps the Blade, and the trial
+             * cannot be offered again.
+             */
+            if (savedPhase == TrialPhase.COMPLETED) {
+                state.setPhase(TrialPhase.COMPLETED);
+
+                if (saved.sacredFlowerPosition != null) {
+                    sacredFlowerPositionsByPlayerName.put(
+                            playerName,
+                            saved.sacredFlowerPosition.toVector3d()
+                    );
+                }
+
+                if (saved.monsterPositions != null && !saved.monsterPositions.isEmpty()) {
+                    List<Vector3d> positions = new ArrayList<>();
+
+                    for (TrialPersistence.PersistentVector3d savedPosition : saved.monsterPositions) {
+                        if (savedPosition != null) {
+                            positions.add(savedPosition.toVector3d());
+                        }
+                    }
+
+                    spawnedTrialMonsterPositionsByPlayerName.put(playerName, positions);
+                }
+
+                continue;
+            }
+
+            /*
+             * All other old active/offered states are not restored after restart.
+             * They only survive so cleanup can happen.
+             */
             state.setPhase(TrialPhase.NONE);
 
             if (saved.sacredFlowerPosition != null) {
@@ -67,10 +107,6 @@ public class TrialManager {
                 spawnedTrialMonsterPositionsByPlayerName.put(playerName, positions);
             }
 
-            /*
-             * If a trial was saved as ongoing/completed, it means the server stopped
-             * before normal cleanup finished. Mark it for cleanup on next join.
-             */
             if (saved.phase != null
                     && !TrialPhase.NONE.name().equals(saved.phase)
                     && !TrialPhase.REFUSED.name().equals(saved.phase)) {
@@ -138,6 +174,13 @@ public class TrialManager {
     public TrialResult offerTrial(String playerName) {
         TrialState state = getOrCreateState(playerName);
 
+        if (state.getPhase() == TrialPhase.COMPLETED) {
+            return new TrialResult(
+                    false,
+                    "The Goddess is gone. Her trial cannot be repeated."
+            );
+        }
+
         if (state.getPhase() == TrialPhase.ACTIVE) {
             return new TrialResult(false, "You are already inside the Goddess' trial.");
         }
@@ -154,6 +197,13 @@ public class TrialManager {
 
     public TrialResult acceptTrial(String playerName) {
         TrialState state = getOrCreateState(playerName);
+
+        if (state.getPhase() == TrialPhase.COMPLETED) {
+            return new TrialResult(
+                    false,
+                    "The Goddess is gone. Her trial cannot be repeated."
+            );
+        }
 
         if (state.getPhase() != TrialPhase.OFFERED) {
             return new TrialResult(false, "No trial has been offered.");
@@ -238,8 +288,32 @@ public class TrialManager {
         sacredFlowerPositionsByPlayerName.remove(playerName);
 
         TrialState state = getOrCreateState(playerName);
-        state.setPhase(TrialPhase.NONE);
 
+        TrialPersistence.PersistentPlayerTrial saved = persistentFile.players.get(playerName);
+
+        boolean completed =
+                state.getPhase() == TrialPhase.COMPLETED
+                        || saved != null && TrialPhase.COMPLETED.name().equals(saved.phase);
+
+        if (completed) {
+            state.setPhase(TrialPhase.COMPLETED);
+
+            TrialPersistence.PersistentPlayerTrial completedSave =
+                    persistentFile.players.computeIfAbsent(
+                            playerName,
+                            ignored -> new TrialPersistence.PersistentPlayerTrial()
+                    );
+
+            completedSave.phase = TrialPhase.COMPLETED.name();
+            completedSave.monsterCleanupPending = false;
+            completedSave.sacredFlowerPosition = null;
+            completedSave.monsterPositions = new ArrayList<>();
+
+            TrialPersistence.save(persistentFile);
+            return;
+        }
+
+        state.setPhase(TrialPhase.NONE);
         removePersistentState(playerName);
     }
 
@@ -257,8 +331,7 @@ public class TrialManager {
             TrialPhase phase = state.getPhase();
 
             if (phase == TrialPhase.ACTIVE
-                    || phase == TrialPhase.OFFERED
-                    || phase == TrialPhase.COMPLETED) {
+                    || phase == TrialPhase.OFFERED) {
 
                 state.setPhase(TrialPhase.NONE);
 

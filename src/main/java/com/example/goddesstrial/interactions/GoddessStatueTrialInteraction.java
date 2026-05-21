@@ -17,6 +17,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.example.goddesstrial.trial.TrialCompletion;
 import com.example.goddesstrial.trial.TrialInventoryUtil;
+import com.example.goddesstrial.listeners.GoddessChoiceSequenceSystem;
 
 import javax.annotation.Nonnull;
 
@@ -96,6 +97,13 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
             return;
         }
 
+        if (trialManager.getPhase(playerName) == TrialPhase.COMPLETED) {
+            player.sendMessage(Message.raw(""));
+            player.sendMessage(Message.raw("The statue is cold and silent"));
+            player.sendMessage(Message.raw("Only the Blade of Balance remains as proof of her gratitude."));
+            return;
+        }
+
         if (trialManager.getPhase(playerName) == TrialPhase.ACTIVE) {
             if (TrialInventoryUtil.hasSacredFlower(player, store, playerEntityRef)) {
                 TrialCompletion.completeTrial(
@@ -108,10 +116,7 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
                 return;
             }
 
-            player.sendMessage(Message.raw(""));
-            player.sendMessage(Message.raw("The statue grows warm beneath your hand."));
-            player.sendMessage(Message.raw("\"The Sacred Flower is not with you.\""));
-            player.sendMessage(Message.raw("\"Return beyond the veil, little wanderer.\""));
+            GoddessChoiceSequenceSystem.startReturnWithoutFlowerDialogue(playerName);
             return;
         }
 
