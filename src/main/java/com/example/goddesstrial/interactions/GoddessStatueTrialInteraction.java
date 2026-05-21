@@ -1,9 +1,9 @@
 package com.example.goddesstrial.interactions;
 
 import com.example.goddesstrial.GoddessTrialPlugin;
+import com.example.goddesstrial.listeners.GoddessDialogueSequenceSystem;
 import com.example.goddesstrial.trial.TrialManager;
 import com.example.goddesstrial.trial.TrialPhase;
-import com.example.goddesstrial.ui.TrialOfferPage;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -21,9 +21,15 @@ import javax.annotation.Nonnull;
 /**
  * Custom placed-block interaction for the Statue of a Slumbering Deity.
  *
- * This is triggered from the statue asset JSON through:
+ * Triggered from the statue asset JSON through:
  *
  * "Type": "GoddessTrial_Statue"
+ *
+ * Behaviour:
+ * - player presses F on the statue
+ * - trial offer state is created
+ * - the cinematic goddess dialogue sequence starts
+ * - after the dialogue sequence, the Accept / Refuse UI opens
  */
 public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
 
@@ -81,6 +87,10 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
 
         TrialManager.TrialResult offerResult = trialManager.offerTrial(playerName);
 
+        /*
+         * If the player already has an offered trial, we still allow the dialogue
+         * to restart. This is nicer than blocking them with command-like text.
+         */
         if (!offerResult.success()
                 && trialManager.getPhase(playerName) != TrialPhase.OFFERED) {
             player.sendMessage(Message.raw(offerResult.message()));
@@ -89,15 +99,7 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
 
         player.sendMessage(Message.raw(""));
         player.sendMessage(Message.raw("=== Statue of a Slumbering Deity ==="));
-        player.sendMessage(Message.raw("The stone is cold beneath your hand."));
-        player.sendMessage(Message.raw("A voice, ancient and tired, whispers:"));
-        player.sendMessage(Message.raw("\"Balance is not mercy. Balance is sacrifice.\""));
-        player.sendMessage(Message.raw("\"Will you take up my blade and walk the trial?\""));
 
-        player.getPageManager().openCustomPage(
-                playerEntityRef,
-                store,
-                new TrialOfferPage(playerRef)
-        );
+        GoddessDialogueSequenceSystem.startDialogue(playerName);
     }
 }

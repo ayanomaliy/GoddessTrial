@@ -35,6 +35,8 @@ public final class TrialStarter {
         }
 
         TrialEffects.grantBladeOfBalance(player, playerRef, store);
+        GoddessSoundUtil.playBladeReceived(playerRef, store);
+
         TrialEffects.reducePlayerToOneHp(store, playerRef);
         TrialMonsterSpawner.spawnTrialWave(playerName, store, playerRef);
 

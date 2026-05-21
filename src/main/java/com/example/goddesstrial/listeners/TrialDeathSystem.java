@@ -3,10 +3,11 @@ package com.example.goddesstrial.listeners;
 import com.example.goddesstrial.GoddessTrialPlugin;
 import com.example.goddesstrial.trial.TrialEffects;
 import com.example.goddesstrial.trial.TrialManager;
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
-import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
@@ -15,14 +16,19 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.logging.Level;
-import com.hypixel.hytale.component.RemoveReason;
 
 /**
- * Proper death listener for the Trial of the Goddess.
+ * Handles trial cleanup when the player dies.
  *
- * Hytale does not expose this as a simple PlayerDeathEvent.
- * Death is represented by DeathComponent being added to an entity.
+ * Death is represented by DeathComponent being added to the player entity.
+ * On death:
+ * - cancel the trial
+ * - remove all tracked trial monsters
+ * - clear the Blade of Balance
+ * - restore player health
+ * - clear Blade recharge state
  */
 public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
 
@@ -31,7 +37,6 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
     @Nonnull
     @Override
     public Query<EntityStore> getQuery() {
-        // Only run this death system for player entities.
         return Query.and(Player.getComponentType());
     }
 
@@ -52,6 +57,7 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
         String playerName = playerRef.getUsername();
 
         GoddessTrialPlugin plugin = GoddessTrialPlugin.getInstance();
+
         if (plugin == null) {
             LOGGER.at(Level.WARNING).log("[GoddessTrial] Could not handle death: plugin instance is null.");
             return;
@@ -70,20 +76,39 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
         }
 
         try {
-            for (Ref<EntityStore> monsterRef : plugin.getTrialManager().consumeSpawnedTrialMonsters(playerName)) {
-                if (monsterRef != null && monsterRef.isValid()) {
-                    commandBuffer.tryRemoveEntity(monsterRef, RemoveReason.REMOVE);
+            List<Ref<EntityStore>> spawnedMonsters =
+                    plugin.getTrialManager().consumeSpawnedTrialMonsters(playerName);
+
+            int trackedCount = spawnedMonsters.size();
+            int scheduledRemovalCount = 0;
+            int invalidCount = 0;
+
+            for (Ref<EntityStore> monsterRef : spawnedMonsters) {
+                if (monsterRef == null || !monsterRef.isValid()) {
+                    invalidCount++;
+                    continue;
                 }
+
+                commandBuffer.tryRemoveEntity(monsterRef, RemoveReason.REMOVE);
+                scheduledRemovalCount++;
             }
 
             TrialEffects.clearPlayerInventory(store, ref);
-
             TrialEffects.clearPlayerInventoryLegacy(player);
-
             TrialEffects.restorePlayerHealthCap(store, ref);
 
+            DamageSystem.clearBladeEnergy(playerName);
+
             LOGGER.at(Level.INFO).log(
-                    "[GoddessTrial] Player %s died. Trial reset, spawned monsters removed, Blade purged, HP restored.",
+                    "[GoddessTrial] Player %s died. Trial reset. Tracked monsters: %s, scheduled removals: %s, invalid refs: %s.",
+                    playerName,
+                    trackedCount,
+                    scheduledRemovalCount,
+                    invalidCount
+            );
+
+            LOGGER.at(Level.INFO).log(
+                    "[GoddessTrial] Blade purged, HP restored, Blade energy cleared for %s.",
                     playerName
             );
         } catch (Exception e) {

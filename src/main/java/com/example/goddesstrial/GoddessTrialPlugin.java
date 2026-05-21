@@ -150,5 +150,12 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register BladeRechargeNotificationSystem");
         }
+
+        try {
+            getEntityStoreRegistry().registerSystem(new GoddessDialogueSequenceSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered GoddessDialogueSequenceSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register GoddessDialogueSequenceSystem");
+        }
     }
 }
