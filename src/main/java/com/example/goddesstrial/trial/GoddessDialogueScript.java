@@ -9,40 +9,38 @@ public final class GoddessDialogueScript {
     }
 
     public static final String[] INTRO_CHAT_LINES = {
-            "You place your hand upon the cold stone.",
-            "For a moment, nothing happens.",
-            "Then warmth spreads through your fingers.",
-            "Not fire. Not sunlight.",
-            "Something older.",
+            "You place your hand upon the cold stone. For a moment, nothing happens.",
+            "Then warmth spreads through your fingers. Not fire. Not sunlight. Something older.",
             "A voice unfolds inside your mind."
     };
 
-    public static final String[] GODDESS_LINES = {
-            "Little wanderer...",
-            "I was once called many names.",
-            "Guardian. Judge. Mother of the First Balance.",
-            "But names are small things, and time has eaten most of mine.",
-            "Long ago, I walked this world in flesh and light.",
-            "I held the scales between life and death.",
-            "Growth and decay.",
-            "Mercy and consequence.",
-            "But my power has grown shallow.",
-            "What remains of me sleeps in stone, memory, and prayer.",
-            "The Sacred Flower was taken from me.",
-            "It blooms now in the dimension between worlds.",
-            "A place where broken things gather.",
-            "Where hungry things wait.",
-            "Where no living hand should reach.",
-            "I cannot enter that place.",
-            "I cannot shape myself a body.",
-            "But I can still grant one relic.",
-            "The weapon that once belonged to me.",
-            "The Blade of Balance.",
-            "It does not forgive.",
-            "It does not hesitate.",
-            "It takes from its wielder as surely as it takes from their enemies.",
-            "Accept it, and I will send you beyond the veil.",
-            "Bring me the Sacred Flower, and my light may yet return.",
-            "Will you carry my blade?"
+    public static final GoddessDialoguePage[] GODDESS_PAGES = {
+            page("Little wanderer... do not be afraid."),
+
+            page("I am only what remains of an old goddess."),
+
+            page("My name has faded with the prayers of this world."),
+
+            page("My soul is trapped beyond the veil."),
+
+            page("I have accepted that I will disappear."),
+
+            page("But I cannot leave this world incomplete."),
+
+            page("Beyond the veil lies the Sacred Flower."),
+
+            page("It the last piece of myself."),
+
+            page("Bring it back, and I may finally slumber whole."),
+
+            page("Take my Blade of Balance, and cross the veil."),
+
+            page("Will you carry my blade?")
     };
+
+    private static GoddessDialoguePage page(String title) {
+        return new GoddessDialoguePage(title, "");
+    }
+
+    public record GoddessDialoguePage(String title, String subtitle) {}
 }

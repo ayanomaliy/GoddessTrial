@@ -1,6 +1,7 @@
 package com.example.goddesstrial.listeners;
 
 import com.example.goddesstrial.trial.GoddessDialogueScript;
+import com.example.goddesstrial.trial.GoddessSoundUtil;
 import com.example.goddesstrial.ui.TrialOfferPage;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -18,24 +19,23 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.goddesstrial.trial.GoddessSoundUtil;
-
 /**
  * Runs the Goddess statue dialogue over time.
  *
  * Flow:
  * - intro appears in chat, line by line
  * - goddess dialogue appears as Event Title overlay
- * - after final goddess line, TrialOfferPage opens
+ * - every goddess page plays the goddess voice sound
+ * - after the final goddess page, TrialOfferPage opens
  */
 public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntityStore> {
 
-    private static final float INTRO_LINE_DELAY_SECONDS = 1.35f;
-    private static final float GODDESS_LINE_DELAY_SECONDS = 4.0f;
+    private static final float INTRO_LINE_DELAY_SECONDS = 2.0f;
+    private static final float GODDESS_PAGE_DELAY_SECONDS = 5.0f;
 
-    private static final float TITLE_FADE_IN_SECONDS = 0.8f;
-    private static final float TITLE_DURATION_SECONDS = 2.6f;
-    private static final float TITLE_FADE_OUT_SECONDS = 0.8f;
+    private static final float TITLE_FADE_IN_SECONDS = 0.7f;
+    private static final float TITLE_DURATION_SECONDS = 3.6f;
+    private static final float TITLE_FADE_OUT_SECONDS = 0.7f;
 
     private static final Map<String, DialogueState> STATES_BY_PLAYER_NAME = new HashMap<>();
 
@@ -91,7 +91,7 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
         state.elapsedSeconds += dt;
 
         if (state.stage == DialogueStage.INTRO) {
-            tickIntro(state, playerName, player);
+            tickIntro(state, player);
             return;
         }
 
@@ -102,7 +102,6 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
 
     private void tickIntro(
             DialogueState state,
-            String playerName,
             Player player
     ) {
         if (state.elapsedSeconds < INTRO_LINE_DELAY_SECONDS) {
@@ -111,18 +110,18 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
 
         state.elapsedSeconds = 0.0f;
 
-        if (state.lineIndex >= GoddessDialogueScript.INTRO_CHAT_LINES.length) {
+        if (state.pageIndex >= GoddessDialogueScript.INTRO_CHAT_LINES.length) {
             state.stage = DialogueStage.GODDESS;
-            state.lineIndex = 0;
-            state.elapsedSeconds = GODDESS_LINE_DELAY_SECONDS;
+            state.pageIndex = 0;
+            state.elapsedSeconds = GODDESS_PAGE_DELAY_SECONDS;
             return;
         }
 
         player.sendMessage(Message.raw(
-                GoddessDialogueScript.INTRO_CHAT_LINES[state.lineIndex]
+                GoddessDialogueScript.INTRO_CHAT_LINES[state.pageIndex]
         ));
 
-        state.lineIndex++;
+        state.pageIndex++;
     }
 
     private void tickGoddess(
@@ -133,13 +132,13 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
             Ref<EntityStore> ref,
             Store<EntityStore> store
     ) {
-        if (state.elapsedSeconds < GODDESS_LINE_DELAY_SECONDS) {
+        if (state.elapsedSeconds < GODDESS_PAGE_DELAY_SECONDS) {
             return;
         }
 
         state.elapsedSeconds = 0.0f;
 
-        if (state.lineIndex >= GoddessDialogueScript.GODDESS_LINES.length) {
+        if (state.pageIndex >= GoddessDialogueScript.GODDESS_PAGES.length) {
             EventTitleUtil.hideEventTitleFromPlayer(playerRef, 0.4f);
 
             player.getPageManager().openCustomPage(
@@ -152,12 +151,13 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
             return;
         }
 
-        String line = GoddessDialogueScript.GODDESS_LINES[state.lineIndex];
+        GoddessDialogueScript.GoddessDialoguePage page =
+                GoddessDialogueScript.GODDESS_PAGES[state.pageIndex];
 
         EventTitleUtil.showEventTitleToPlayer(
                 playerRef,
-                Message.raw(line),
-                Message.raw(""),
+                Message.raw(page.title()),
+                Message.raw(page.subtitle()),
                 true,
                 EventTitleUtil.DEFAULT_ZONE,
                 TITLE_FADE_IN_SECONDS,
@@ -167,8 +167,7 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
 
         GoddessSoundUtil.playGoddessVoice(ref, store);
 
-        state.lineIndex++;
-        state.lineIndex++;
+        state.pageIndex++;
     }
 
     private enum DialogueStage {
@@ -178,7 +177,7 @@ public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntitySto
 
     private static final class DialogueState {
         private DialogueStage stage = DialogueStage.INTRO;
-        private int lineIndex = 0;
+        private int pageIndex = 0;
         private float elapsedSeconds = INTRO_LINE_DELAY_SECONDS;
     }
 }
