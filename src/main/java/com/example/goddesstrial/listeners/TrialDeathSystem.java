@@ -74,6 +74,7 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
 
         try {
             TrialFlowerSpawner.removeStoredSacredFlower(playerName, store);
+            TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
 
             TrialMonsterCleanupSystem.requestCleanup(playerName);
 

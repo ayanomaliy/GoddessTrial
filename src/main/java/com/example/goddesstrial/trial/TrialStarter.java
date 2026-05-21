@@ -36,6 +36,7 @@ public final class TrialStarter {
         TrialInventoryUtil.removeBladeOfBalance(player, store, playerRef);
         TrialInventoryUtil.removeSacredFlower(player, store, playerRef);
 
+        TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
         boolean flowerSpawned = TrialFlowerSpawner.spawnSacredFlower(
                 playerName,
                 store,

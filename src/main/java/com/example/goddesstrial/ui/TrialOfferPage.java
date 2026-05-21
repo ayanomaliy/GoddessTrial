@@ -1,6 +1,8 @@
 package com.example.goddesstrial.ui;
 
 import com.example.goddesstrial.GoddessTrialPlugin;
+import com.example.goddesstrial.trial.GoddessDialogueScript;
+import com.example.goddesstrial.trial.GoddessSoundUtil;
 import com.example.goddesstrial.trial.TrialManager;
 import com.example.goddesstrial.trial.TrialStarter;
 import com.hypixel.hytale.codec.Codec;
@@ -18,6 +20,8 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.EventTitleUtil;
+import com.example.goddesstrial.listeners.GoddessChoiceSequenceSystem;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +31,10 @@ import javax.annotation.Nonnull;
 public class TrialOfferPage extends InteractiveCustomUIPage<TrialOfferPage.UIEventData> {
 
     public static final String LAYOUT = "goddesstrial/TrialOffer.ui";
+
+    private static final float TITLE_FADE_IN_SECONDS = 0.5f;
+    private static final float TITLE_DURATION_SECONDS = 2.8f;
+    private static final float TITLE_FADE_OUT_SECONDS = 0.5f;
 
     private final PlayerRef playerRef;
 
@@ -101,7 +109,7 @@ public class TrialOfferPage extends InteractiveCustomUIPage<TrialOfferPage.UIEve
                 player.sendMessage(Message.raw(startResult.message()));
 
                 if (startResult.success()) {
-                    player.sendMessage(Message.raw("\"Then wake the blade, and let balance judge you.\""));
+                    GoddessChoiceSequenceSystem.startAcceptedDialogue(playerName);
                 }
 
                 close();
@@ -112,7 +120,10 @@ public class TrialOfferPage extends InteractiveCustomUIPage<TrialOfferPage.UIEve
                         trialManager.refuseTrial(playerName);
 
                 player.sendMessage(Message.raw(refuseResult.message()));
-                player.sendMessage(Message.raw("\"Then leave this place. Mercy has not chosen you today.\""));
+
+                if (refuseResult.success()) {
+                    GoddessChoiceSequenceSystem.startRefusedDialogue(playerName);
+                }
 
                 close();
                 break;
@@ -121,6 +132,25 @@ public class TrialOfferPage extends InteractiveCustomUIPage<TrialOfferPage.UIEve
                 close();
                 break;
         }
+    }
+
+    private void showGoddessTitle(
+            GoddessDialogueScript.GoddessDialoguePage page,
+            Ref<EntityStore> ref,
+            Store<EntityStore> store
+    ) {
+        EventTitleUtil.showEventTitleToPlayer(
+                playerRef,
+                Message.raw(page.title()),
+                Message.raw(page.subtitle()),
+                true,
+                EventTitleUtil.DEFAULT_ZONE,
+                TITLE_FADE_IN_SECONDS,
+                TITLE_DURATION_SECONDS,
+                TITLE_FADE_OUT_SECONDS
+        );
+
+        GoddessSoundUtil.playGoddessVoice(ref, store);
     }
 
     /**

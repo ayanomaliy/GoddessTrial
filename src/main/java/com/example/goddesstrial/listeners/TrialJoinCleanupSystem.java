@@ -104,6 +104,7 @@ public class TrialJoinCleanupSystem extends EntityTickingSystem<EntityStore> {
 
         if (plugin.getTrialManager().isMonsterCleanupPending(playerName)) {
             TrialFlowerSpawner.removeStoredSacredFlower(playerName, store);
+            TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
             TrialMonsterCleanupSystem.requestCleanup(playerName);
 
             TrialInventoryUtil.removeBladeOfBalance(player, store, ref);

@@ -42,6 +42,10 @@ public class RefuseSubCommand extends AbstractPlayerCommand {
         context.sendMessage(Message.raw(""));
         context.sendMessage(Message.raw("=== Trial of the Goddess ==="));
         context.sendMessage(Message.raw(result.message()));
+
+        if (result.success()) {
+            context.sendMessage(Message.raw("\"Then leave me to my silence.\""));
+        }
         context.sendMessage(Message.raw("==========================="));
     }
 }

@@ -62,6 +62,7 @@ public class ReloadSubCommand extends AbstractPlayerCommand {
         String playerName = playerRef.getUsername();
 
         try {
+            com.example.goddesstrial.trial.TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
             TrialManager.TrialResult resetResult =
                     plugin.getTrialManager().resetTrial(playerName);
 

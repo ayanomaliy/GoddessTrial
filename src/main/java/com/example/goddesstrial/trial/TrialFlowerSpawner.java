@@ -21,7 +21,7 @@ import java.util.List;
  */
 public final class TrialFlowerSpawner {
 
-    public static final String FLOWER_BLOCK_ID = "Plant_Flower_Orchid_Purple";
+    public static final String FLOWER_BLOCK_ID = "GoddessTrial_Sacred_Flower";
     public static final String AIR_BLOCK_ID = "Air";
 
     private TrialFlowerSpawner() {
@@ -176,6 +176,41 @@ public final class TrialFlowerSpawner {
         );
 
         return removed;
+    }
+
+    public static int removeAllConfiguredSacredFlowers(Store<EntityStore> store) {
+        if (store == null) {
+            return 0;
+        }
+
+        World world = store.getExternalData().getWorld();
+
+        int removedCount = 0;
+
+        for (SacredFlowerPositionConfig.ConfiguredFlowerPosition configuredPosition
+                : SacredFlowerPositionConfig.getShuffledPositions()) {
+
+            Vector3d position = configuredPosition.position();
+
+            int x = (int) Math.floor(position.getX());
+            int y = (int) Math.floor(position.getY());
+            int z = (int) Math.floor(position.getZ());
+
+            boolean removed = removeFlowerBlock(world, x, y, z);
+
+            if (removed) {
+                removedCount++;
+
+                System.out.println(
+                        "[GoddessTrial] Removed configured Sacred Flower spot: "
+                                + configuredPosition.name()
+                                + " at "
+                                + x + ", " + y + ", " + z
+                );
+            }
+        }
+
+        return removedCount;
     }
 
     private static WorldChunk getChunk(World world, int x, int z) {

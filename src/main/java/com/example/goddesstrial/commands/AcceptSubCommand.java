@@ -60,8 +60,7 @@ public class AcceptSubCommand extends AbstractPlayerCommand {
         context.sendMessage(Message.raw(result.message()));
 
         if (result.success()) {
-            context.sendMessage(Message.raw("\"Then wake the blade, and let balance judge you.\""));
-        }
+            context.sendMessage(Message.raw("\"Then take my blade. Cross the veil, and bring back what was once mine.\""));        }
 
         context.sendMessage(Message.raw("==========================="));
     }

@@ -9,8 +9,7 @@ public final class GoddessDialogueScript {
     }
 
     public static final String[] INTRO_CHAT_LINES = {
-            "You place your hand upon the cold stone. For a moment, nothing happens.",
-            "Then warmth spreads through your fingers. Not fire. Not sunlight. Something older.",
+            "You place your hand upon the cold stone. For a moment, nothing happens. Then warmth spreads through your fingers. Not fire. Not sunlight. Something older.",
             "A voice unfolds inside your mind."
     };
 
@@ -31,9 +30,9 @@ public final class GoddessDialogueScript {
 
             page("It is the last piece of myself."),
 
-            page("Bring it back, and I may finally slumber whole."),
+            page("Bring it back to me, and I may finally slumber whole."),
 
-            page("Take my Blade of Balance, and cross the veil."),
+            page("Take my weapon, and cross the veil."),
 
             page("Will you carry my blade?")
     };
@@ -53,6 +52,18 @@ public final class GoddessDialogueScript {
     public static final String[] COMPLETION_AFTER_CHAT_LINES = {
             "The warmth fades. The voice is gone. The statue is only stone again.",
             "The Trial of the Goddess is complete."
+    };
+    public static final GoddessDialoguePage[] ACCEPTED_PAGES = {
+            page("Then take my blade."),
+            page("Cross the veil, and bring back what was once mine.")
+    };
+
+    public static final GoddessDialoguePage[] REFUSED_PAGES = {
+            page("Then leave me to my silence.")
+    };
+
+    public static final String[] REFUSED_AFTER_CHAT_LINES = {
+            "The stone grows cold beneath your hand."
     };
 
     private static GoddessDialoguePage page(String title) {
