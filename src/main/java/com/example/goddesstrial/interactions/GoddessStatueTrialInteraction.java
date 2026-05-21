@@ -15,6 +15,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialCompletion;
+import com.example.goddesstrial.trial.TrialInventoryUtil;
 
 import javax.annotation.Nonnull;
 
@@ -79,9 +81,21 @@ public class GoddessStatueTrialInteraction extends SimpleInstantInteraction {
         TrialManager trialManager = plugin.getTrialManager();
 
         if (trialManager.getPhase(playerName) == TrialPhase.ACTIVE) {
-            player.sendMessage(Message.raw(
-                    "The statue is silent. You are already inside the Goddess' trial."
-            ));
+            if (TrialInventoryUtil.hasSacredFlower(player, store, playerEntityRef)) {
+                TrialCompletion.completeTrial(
+                        trialManager,
+                        playerName,
+                        player,
+                        playerEntityRef,
+                        store
+                );
+                return;
+            }
+
+            player.sendMessage(Message.raw(""));
+            player.sendMessage(Message.raw("The statue grows warm beneath your hand."));
+            player.sendMessage(Message.raw("\"The Sacred Flower is not with you.\""));
+            player.sendMessage(Message.raw("\"Return beyond the veil, little wanderer.\""));
             return;
         }
 

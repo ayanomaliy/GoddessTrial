@@ -29,13 +29,30 @@ public final class GoddessDialogueScript {
 
             page("Beyond the veil lies the Sacred Flower."),
 
-            page("It the last piece of myself."),
+            page("It is the last piece of myself."),
 
             page("Bring it back, and I may finally slumber whole."),
 
             page("Take my Blade of Balance, and cross the veil."),
 
             page("Will you carry my blade?")
+    };
+
+    public static final String[] COMPLETION_CHAT_LINES = {
+            "The Sacred Flower trembles in your hands. Its light sinks into the cold stone."
+    };
+
+    public static final GoddessDialoguePage[] COMPLETION_PAGES = {
+            page("Finally... I am whole again."),
+
+            page("Thank you, little wanderer."),
+
+            page("Now I may slumber."),
+    };
+
+    public static final String[] COMPLETION_AFTER_CHAT_LINES = {
+            "The warmth fades. The voice is gone. The statue is only stone again.",
+            "The Trial of the Goddess is complete."
     };
 
     private static GoddessDialoguePage page(String title) {

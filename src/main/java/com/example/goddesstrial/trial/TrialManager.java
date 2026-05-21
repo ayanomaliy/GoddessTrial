@@ -114,6 +114,20 @@ public class TrialManager {
         return refs;
     }
 
+
+    public TrialResult completeTrial(String playerName) {
+        TrialState state = getOrCreateState(playerName);
+
+        if (state.getPhase() != TrialPhase.ACTIVE) {
+            return new TrialResult(false, "No active trial can be completed.");
+        }
+
+        state.setPhase(TrialPhase.COMPLETED);
+        clearSpawnedTrialMonsters(playerName);
+
+        return new TrialResult(true, "The Trial of the Goddess has been completed.");
+    }
+
     public void clearSpawnedTrialMonsters(String playerName) {
         spawnedTrialMonstersByPlayerName.remove(playerName);
     }

@@ -39,6 +39,7 @@ public final class TrialStarter {
 
         TrialEffects.reducePlayerToOneHp(store, playerRef);
         TrialMonsterSpawner.spawnTrialWave(playerName, store, playerRef);
+        TrialFlowerSpawner.spawnSacredFlower(playerName, store, playerRef);
 
         return new TrialStartResult(
                 true,

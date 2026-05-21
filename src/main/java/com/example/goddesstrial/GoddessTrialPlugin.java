@@ -157,5 +157,17 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register GoddessDialogueSequenceSystem");
         }
+        try {
+            getEntityStoreRegistry().registerSystem(new TrialMonsterCleanupSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered TrialMonsterCleanupSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register TrialMonsterCleanupSystem");
+        }
+        try {
+            getEntityStoreRegistry().registerSystem(new GoddessCompletionSequenceSystem());
+            LOGGER.at(Level.INFO).log("[GoddessTrial] Registered GoddessCompletionSequenceSystem");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register GoddessCompletionSequenceSystem");
+        }
     }
 }
