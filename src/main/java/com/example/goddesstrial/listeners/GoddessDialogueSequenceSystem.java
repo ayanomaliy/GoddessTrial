@@ -30,12 +30,12 @@ import java.util.Map;
  */
 public class GoddessDialogueSequenceSystem extends EntityTickingSystem<EntityStore> {
 
-    private static final float INTRO_LINE_DELAY_SECONDS = 1.0f;
+    private static final float INTRO_LINE_DELAY_SECONDS = 1.4f;
     private static final float GODDESS_PAGE_DELAY_SECONDS = 3.0f;
 
-    private static final float TITLE_FADE_IN_SECONDS = 0.7f;
-    private static final float TITLE_DURATION_SECONDS = 3.6f;
-    private static final float TITLE_FADE_OUT_SECONDS = 0.7f;
+    private static final float TITLE_FADE_IN_SECONDS = 0.35f;
+    private static final float TITLE_DURATION_SECONDS = 2.30f;
+    private static final float TITLE_FADE_OUT_SECONDS = 0.35f;
 
     private static final Map<String, DialogueState> STATES_BY_PLAYER_NAME = new HashMap<>();
 

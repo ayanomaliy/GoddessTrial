@@ -25,9 +25,9 @@ public class GoddessChoiceSequenceSystem extends EntityTickingSystem<EntityStore
 
     private static final float PAGE_DELAY_SECONDS = 3.0f;
 
-    private static final float TITLE_FADE_IN_SECONDS = 0.5f;
-    private static final float TITLE_DURATION_SECONDS = 2.0f;
-    private static final float TITLE_FADE_OUT_SECONDS = 0.5f;
+    private static final float TITLE_FADE_IN_SECONDS = 0.35f;
+    private static final float TITLE_DURATION_SECONDS = 2.30f;
+    private static final float TITLE_FADE_OUT_SECONDS = 0.35f;
 
     private static final Map<String, ChoiceState> STATES_BY_PLAYER_NAME = new HashMap<>();
 
