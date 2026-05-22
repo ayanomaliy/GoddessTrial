@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialObjectiveTracker;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -125,11 +126,24 @@ public class TrialJoinCleanupSystem extends EntityTickingSystem<EntityStore> {
              */
             TrialEffects.restorePlayerHealthCap(store, ref);
             DamageSystem.clearBladeEnergy(playerName);
+            TrialObjectiveTracker.clearObjective(playerRef);
 
             System.out.println(
                     "[GoddessTrial] Join validation for "
                             + playerName
                             + ": pending shutdown/death cleanup found. Trial items removed, HP restored, monster cleanup scheduled."
+            );
+
+            return;
+        }
+
+        if (phase == TrialPhase.COMPLETED) {
+            TrialObjectiveTracker.clearObjective(playerRef);
+
+            System.out.println(
+                    "[GoddessTrial] Join validation for "
+                            + playerName
+                            + ": completed trial. Objective cleared."
             );
 
             return;
@@ -158,6 +172,8 @@ public class TrialJoinCleanupSystem extends EntityTickingSystem<EntityStore> {
 
         TrialEffects.restorePlayerHealthCap(store, ref);
         DamageSystem.clearBladeEnergy(playerName);
+        TrialObjectiveTracker.clearObjective(playerRef);
+
 
         if (removedBlade || removedFlower) {
             System.out.println(

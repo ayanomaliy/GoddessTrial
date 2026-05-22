@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import java.util.List;
 
@@ -83,7 +84,27 @@ public final class TrialFlowerSpawner {
             GoddessTrialPlugin plugin = GoddessTrialPlugin.getInstance();
 
             if (plugin != null) {
-                plugin.getTrialManager().rememberSacredFlowerPosition(playerName, actualFlowerPosition);
+                plugin.getTrialManager().rememberSacredFlowerPosition(
+                        playerName,
+                        actualFlowerPosition
+                );
+
+                try {
+                    PlayerRef playerRefComponent = store.getComponent(
+                            playerRef,
+                            PlayerRef.getComponentType()
+                    );
+
+                    TrialObjectiveTracker.showFindFlowerObjective(
+                            playerRefComponent,
+                            actualFlowerPosition
+                    );
+                } catch (Exception e) {
+                    System.out.println(
+                            "[GoddessTrial] Sacred Flower was placed, but objective tracking failed."
+                    );
+                    e.printStackTrace();
+                }
             }
 
             player.sendMessage(Message.raw(

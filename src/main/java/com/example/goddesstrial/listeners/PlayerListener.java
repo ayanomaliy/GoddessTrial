@@ -6,6 +6,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.example.goddesstrial.trial.TrialObjectiveTracker;
 
 import java.util.logging.Level;
 
@@ -85,9 +86,15 @@ public class PlayerListener {
     }
 
     private void onPlayerDisconnect(PlayerDisconnectEvent event) {
-        String playerName = event.getPlayerRef() != null
-                ? event.getPlayerRef().getUsername()
+        PlayerRef playerRef = event.getPlayerRef();
+
+        String playerName = playerRef != null
+                ? playerRef.getUsername()
                 : "Unknown";
+
+        if (playerRef != null) {
+            TrialObjectiveTracker.clearObjective(playerRef);
+        }
 
         LOGGER.at(Level.INFO).log("[GoddessTrial] Player %s disconnected", playerName);
     }

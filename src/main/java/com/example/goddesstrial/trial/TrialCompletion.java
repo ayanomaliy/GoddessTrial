@@ -8,6 +8,8 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialObjectiveTracker;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 /**
  * Handles successful completion of the Trial of the Goddess.
@@ -46,6 +48,12 @@ public final class TrialCompletion {
         DamageSystem.clearBladeEnergy(playerName);
 
         trialManager.completeTrial(playerName);
+        PlayerRef playerRefComponent = store.getComponent(
+                playerRef,
+                PlayerRef.getComponentType()
+        );
+
+        TrialObjectiveTracker.markCompletedAndClear(playerRefComponent);
 
         /*
          * We cannot safely remove tracked monsters directly here because this

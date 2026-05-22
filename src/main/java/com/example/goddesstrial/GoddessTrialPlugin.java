@@ -198,5 +198,6 @@ public class GoddessTrialPlugin extends JavaPlugin {
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[GoddessTrial] Failed to register GoddessCompletionSequenceSystem");
         }
+
     }
 }

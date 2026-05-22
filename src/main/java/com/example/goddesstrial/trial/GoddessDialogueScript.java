@@ -70,11 +70,9 @@ public final class GoddessDialogueScript {
     };
 
     public static final GoddessDialoguePage[] RETURN_WITHOUT_FLOWER_PAGES = {
-            page("The statue grows warm beneath your hand."),
-
             page("The Sacred Flower is not with you."),
-
-            page("Return beyond the veil, little wanderer.")
+            page("Find it and bring it to me..."),
+            page("So I can be complete once again")
     };
 
     private static GoddessDialoguePage page(String title) {

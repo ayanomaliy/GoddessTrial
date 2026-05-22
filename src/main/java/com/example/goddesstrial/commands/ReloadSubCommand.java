@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.example.goddesstrial.trial.TrialFlowerSpawner;
+import com.example.goddesstrial.trial.TrialObjectiveTracker;
 
 import javax.annotation.Nonnull;
 
@@ -76,6 +77,7 @@ public class ReloadSubCommand extends AbstractPlayerCommand {
                     "Removed " + removedFlowers + " configured Sacred Flower block(s)."
             ));
 
+            TrialObjectiveTracker.clearObjective(playerRef);
             TrialManager.TrialResult resetResult =
                     plugin.getTrialManager().resetTrial(playerName);
 

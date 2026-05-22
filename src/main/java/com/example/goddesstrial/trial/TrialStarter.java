@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 /**
  * Starts the actual Trial of the Goddess gameplay.
@@ -50,6 +51,12 @@ public final class TrialStarter {
          * the new one. This is safe now because removeFlowerBlock uses block ID 0,
          * which debug confirmed is air.
          */
+        PlayerRef playerRefComponent = store.getComponent(
+                playerRef,
+                PlayerRef.getComponentType()
+        );
+
+        TrialObjectiveTracker.clearObjective(playerRefComponent);
         TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
 
         boolean flowerSpawned = TrialFlowerSpawner.spawnSacredFlower(

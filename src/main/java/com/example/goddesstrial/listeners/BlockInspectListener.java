@@ -18,6 +18,7 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialObjectiveTracker;
 
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -138,6 +139,7 @@ public class BlockInspectListener {
         player.giveItem(sacredFlower, playerEntityRef, store);
 
         plugin.getTrialManager().clearSacredFlowerPosition(playerName);
+        TrialObjectiveTracker.showReturnToStatueObjective(playerRef);
 
         tryCancel(event);
 

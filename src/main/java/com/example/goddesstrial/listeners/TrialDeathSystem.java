@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialObjectiveTracker;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -71,6 +72,7 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
             );
             return;
         }
+        TrialObjectiveTracker.markFailedAndClear(playerRef);
 
         try {
             /*
