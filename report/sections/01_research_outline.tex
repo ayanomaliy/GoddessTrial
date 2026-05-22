@@ -19,29 +19,3 @@ The modding landscape has also changed because Hytale itself has had an unusual 
 Early Hytale modding also shows how unpredictable creator communities can be. Shortly after launch, players created experimental mods that ran Windows 95, Minecraft, and even Hytale itself inside Hytale. These are not necessarily typical gameplay mods, but they show that strong modding tools can turn a game into a platform for unexpected experiments.
 
 Overall, Hytale is a useful case study because it shows modding becoming part of the development pipeline. Mods are created with official tools, shared through public platforms, used to build multiplayer spaces, and sometimes recognized by the developers themselves. My own project approaches this from the plugin side: instead of asking only what players can build, I want to ask what parts of the game's logic can be changed when the developers provide the programming interface.
-
-\section{Critical Mod Proposal}
-
-\subsection{Trial of the Goddess}
-
-For my own critical mod, I plan to develop a Hytale plugin called \textit{Trial of the Goddess}. The mod will not focus mainly on new textures, models, or visual assets. Instead, it will use the Hytale development toolkit to interfere with the game logic itself. My goal is to test what kinds of rules, events, combat values, and player interactions can be changed through a plugin.
-
-The starting point of the mod is Hytale's statues. At the moment, these statues mainly seem to function as mysterious worldbuilding objects. They create atmosphere and suggest lore, but they do not yet seem to have a strong gameplay role. In \textit{Trial of the Goddess}, a statue becomes the place where the player can begin a trial. The Goddess is not a full NPC, but a mythical presence connected to the statue: a being above the player who offers a challenge.
-
-The goal of the trial is to retrieve a sacred flower and bring it back to the Goddess without dying. When the player starts the trial, they receive \textit{The Blade of Balance}. This is a powerful sword that can defeat enemies in one hit. However, while holding it, the player also only has one hit point and can be killed in one hit. The weapon therefore gives the player extreme power and extreme vulnerability at the same time.
-
-Once the trial begins, the monster spawn rate in the area increases. Somewhere nearby, the sacred flower spawns. The player has to find it, pick it up, and return it to the statue. If the player succeeds, the trial is completed. If the player dies, the Blade of Balance is taken away, and the trial has to be restarted.
-
-This makes the mod critical because it changes how players approach combat. Normally, becoming powerful in a game means becoming safer. \textit{Trial of the Goddess} inverts this logic: the player receives a mighty weapon, but that weapon also makes them fragile. Combat becomes less about slowly reducing enemy health and more about movement, timing, risk, and avoiding mistakes.
-
-From a technical perspective, I want to test whether a Hytale plugin can react to player actions in real time, modify health and damage values, control item effects, change spawning conditions, and create a temporary rule system around a specific area or event. A successful first draft would already be a small working plugin where the player can start the trial at a statue, receive the Blade of Balance, search for the sacred flower, and either complete the trial or lose the blade after dying.
-
-\subsection{Prototype Repository}
-
-As part of the proposal, I also created a small first prototype of \textit{Trial of the Goddess}. The prototype is available here:
-
-\begin{center}
-    \url{https://github.com/ayanomaliy/GoddessTrial.git}
-\end{center}
-
-The repository contains my current experimental implementation of the plugin. It is not a finished version of the mod yet, but a proof of concept and a technical starting point. It gives me a concrete codebase to extend during the final report phase. Instructions for how to start and test the prototype can be found in the repository's README file.
