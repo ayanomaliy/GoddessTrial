@@ -20,7 +20,11 @@
       },
       "Harvest": {}
     },
-    "ParticleColor": "#d553a7"
+    "ParticleColor": "#d553a7",
+    "Light": {
+      "Color": "#c6f",
+      "Radius": 10
+    }
   },
   "Icon": "Icons/ItemsGenerated/Plant_Flower_Orchid_Purple.png",
   "IconProperties": {
