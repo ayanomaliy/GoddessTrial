@@ -25,7 +25,8 @@ import java.util.Set;
  *
  * Server restart behavior:
  * - active/offered trials are not restored after restart
- * - pending cleanup removes trial items, removes flower, schedules monster purge
+ * - pending cleanup removes trial items, removes the remembered flower if possible,
+ *   schedules monster purge
  * - the player is healed after the trial is cancelled
  */
 public class TrialJoinCleanupSystem extends EntityTickingSystem<EntityStore> {
@@ -103,8 +104,15 @@ public class TrialJoinCleanupSystem extends EntityTickingSystem<EntityStore> {
         TrialPhase phase = plugin.getTrialManager().getPhase(playerName);
 
         if (plugin.getTrialManager().isMonsterCleanupPending(playerName)) {
+            /*
+             * Only remove the remembered flower position.
+             *
+             * Do not call removeAllConfiguredSacredFlowers(store) here. That broad
+             * cleanup currently relies on an invalid "Air" block key and can fail
+             * repeatedly while leaving stale flowers behind.
+             */
             TrialFlowerSpawner.removeStoredSacredFlower(playerName, store);
-            TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
+
             TrialMonsterCleanupSystem.requestCleanup(playerName);
 
             TrialInventoryUtil.removeBladeOfBalance(player, store, ref);

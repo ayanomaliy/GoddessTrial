@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 
 import java.util.List;
 
@@ -130,12 +131,46 @@ public final class TrialFlowerSpawner {
             WorldChunk chunk = getChunk(world, x, z);
 
             if (chunk == null) {
+                System.out.println(
+                        "[GoddessTrial] Could not remove Sacred Flower at "
+                                + x + ", " + y + ", " + z
+                                + ": chunk was null."
+                );
                 return false;
             }
 
-            return chunk.setBlock(x, y, z, AIR_BLOCK_ID);
+            int oldBlock = chunk.getBlock(x, y, z);
+
+            boolean removed = chunk.setBlock(
+                    x,
+                    y,
+                    z,
+                    0,
+                    null,
+                    0,
+                    0,
+                    0
+            );
+
+            int newBlock = chunk.getBlock(x, y, z);
+
+            System.out.println(
+                    "[GoddessTrial] Tried low-level flower removal at "
+                            + x + ", " + y + ", " + z
+                            + " | oldBlock="
+                            + oldBlock
+                            + " | newBlock="
+                            + newBlock
+                            + " | removed="
+                            + removed
+            );
+
+            return removed;
         } catch (Exception e) {
-            System.out.println("[GoddessTrial] Exception while removing Sacred Flower.");
+            System.out.println(
+                    "[GoddessTrial] Exception while removing Sacred Flower at "
+                            + x + ", " + y + ", " + z
+            );
             e.printStackTrace();
             return false;
         }
@@ -152,9 +187,13 @@ public final class TrialFlowerSpawner {
         }
 
         Vector3d flowerPosition =
-                plugin.getTrialManager().consumeSacredFlowerPosition(playerName);
+                plugin.getTrialManager().getSacredFlowerPosition(playerName);
 
         if (flowerPosition == null) {
+            System.out.println(
+                    "[GoddessTrial] No stored Sacred Flower position for "
+                            + playerName
+            );
             return false;
         }
 
@@ -167,13 +206,23 @@ public final class TrialFlowerSpawner {
         boolean removed = removeFlowerBlock(world, x, y, z);
 
         System.out.println(
-                "[GoddessTrial] Removed stored Sacred Flower for "
+                "[GoddessTrial] Tried to remove stored Sacred Flower for "
                         + playerName
                         + " at "
                         + x + ", " + y + ", " + z
                         + " | removed="
                         + removed
         );
+
+        /*
+         * Important:
+         * Only forget the stored flower position if the world block was actually removed.
+         * Otherwise the plugin loses the only reliable coordinate while the flower
+         * remains in the world.
+         */
+        if (removed) {
+            plugin.getTrialManager().clearSacredFlowerPosition(playerName);
+        }
 
         return removed;
     }
@@ -216,5 +265,138 @@ public final class TrialFlowerSpawner {
     private static WorldChunk getChunk(World world, int x, int z) {
         long chunkIndex = ChunkUtil.indexChunkFromBlock(x, z);
         return world.getNonTickingChunk(chunkIndex);
+    }
+
+
+
+    public static void debugAirCandidateBlocks(
+            String playerName,
+            Store<EntityStore> store,
+            Ref<EntityStore> playerRef
+    ) {
+        if (store == null || playerRef == null || !playerRef.isValid()) {
+            System.out.println("[GoddessTrial] Cannot debug air blocks: invalid store/playerRef.");
+            return;
+        }
+
+        World world = store.getExternalData().getWorld();
+
+        TransformComponent transform = store.getComponent(
+                playerRef,
+                TransformComponent.getComponentType()
+        );
+
+        if (transform != null) {
+            Vector3d playerPosition = transform.getPosition();
+
+            int px = (int) Math.floor(playerPosition.getX());
+            int py = (int) Math.floor(playerPosition.getY());
+            int pz = (int) Math.floor(playerPosition.getZ());
+
+            debugBlockColumn(
+                    world,
+                    "Player position",
+                    px,
+                    py,
+                    pz
+            );
+        } else {
+            System.out.println("[GoddessTrial] Cannot debug player blocks: player has no TransformComponent.");
+        }
+
+        GoddessTrialPlugin plugin = GoddessTrialPlugin.getInstance();
+
+        if (plugin != null && playerName != null) {
+            Vector3d storedFlowerPosition =
+                    plugin.getTrialManager().getSacredFlowerPosition(playerName);
+
+            if (storedFlowerPosition != null) {
+                int fx = (int) Math.floor(storedFlowerPosition.getX());
+                int fy = (int) Math.floor(storedFlowerPosition.getY());
+                int fz = (int) Math.floor(storedFlowerPosition.getZ());
+
+                debugBlockColumn(
+                        world,
+                        "Stored Sacred Flower position",
+                        fx,
+                        fy,
+                        fz
+                );
+            } else {
+                System.out.println(
+                        "[GoddessTrial] No stored Sacred Flower position for "
+                                + playerName
+                );
+            }
+        }
+
+        for (SacredFlowerPositionConfig.ConfiguredFlowerPosition configuredPosition
+                : SacredFlowerPositionConfig.getShuffledPositions()) {
+
+            Vector3d position = configuredPosition.position();
+
+            int x = (int) Math.floor(position.getX());
+            int y = (int) Math.floor(position.getY());
+            int z = (int) Math.floor(position.getZ());
+
+            debugBlockColumn(
+                    world,
+                    "Configured flower spot: " + configuredPosition.name(),
+                    x,
+                    y,
+                    z
+            );
+        }
+    }
+
+    private static void debugBlockColumn(
+            World world,
+            String label,
+            int x,
+            int y,
+            int z
+    ) {
+        try {
+            WorldChunk chunk = getChunk(world, x, z);
+
+            if (chunk == null) {
+                System.out.println(
+                        "[GoddessTrial] Block debug failed for "
+                                + label
+                                + " at "
+                                + x + ", " + y + ", " + z
+                                + ": chunk was null."
+                );
+                return;
+            }
+
+            int blockAtPosition = chunk.getBlock(x, y, z);
+            int blockOneAbove = chunk.getBlock(x, y + 1, z);
+            int blockTwoAbove = chunk.getBlock(x, y + 2, z);
+            int blockFiveAbove = chunk.getBlock(x, y + 5, z);
+
+            System.out.println(
+                    "[GoddessTrial] Block debug | "
+                            + label
+                            + " | base="
+                            + x + ", " + y + ", " + z
+                            + " | blockAtPosition="
+                            + blockAtPosition
+                            + " | y+1="
+                            + blockOneAbove
+                            + " | y+2="
+                            + blockTwoAbove
+                            + " | y+5="
+                            + blockFiveAbove
+            );
+        } catch (Exception e) {
+            System.out.println(
+                    "[GoddessTrial] Exception during block debug for "
+                            + label
+                            + " at "
+                            + x + ", " + y + ", " + z
+            );
+            e.printStackTrace();
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.example.goddesstrial.trial.TrialFlowerSpawner;
 
 import javax.annotation.Nonnull;
 
@@ -62,19 +63,24 @@ public class ReloadSubCommand extends AbstractPlayerCommand {
         String playerName = playerRef.getUsername();
 
         try {
-            com.example.goddesstrial.trial.TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
+            TrialFlowerSpawner.debugAirCandidateBlocks(
+                    playerName,
+                    store,
+                    ref
+            );
+
+            int removedFlowers = TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
+
+            context.sendMessage(Message.raw("Printed block ID debug info to the server log."));
+            context.sendMessage(Message.raw(
+                    "Removed " + removedFlowers + " configured Sacred Flower block(s)."
+            ));
+
             TrialManager.TrialResult resetResult =
                     plugin.getTrialManager().resetTrial(playerName);
 
             TrialEffects.clearPlayerInventory(store, ref);
-
-            /*
-             * Legacy fallback:
-             * Keep this only if you still have clearPlayerInventoryLegacy(Player)
-             * in TrialEffects. It helps catch older/deprecated inventory storage.
-             */
             TrialEffects.clearPlayerInventoryLegacy(player);
-
             TrialEffects.restorePlayerHealthCap(store, ref);
 
             context.sendMessage(Message.raw("GoddessTrial debug reload complete."));

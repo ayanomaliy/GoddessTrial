@@ -101,7 +101,34 @@ public class BlockInspectListener {
         int y = position.getY();
         int z = position.getZ();
 
-        TrialFlowerSpawner.removeFlowerBlock(world, x, y, z);
+        /*
+         * Important:
+         * Do not give the player the Sacred Flower unless the world block was
+         * actually removed.
+         *
+         * Previously, removeFlowerBlock(...) could fail because "Air" is not a
+         * valid block key, but the player still received the quest item and the
+         * TrialManager forgot the flower position. That created stale world flowers.
+         */
+        boolean removed = TrialFlowerSpawner.removeFlowerBlock(world, x, y, z);
+
+        if (!removed) {
+            tryCancel(event);
+
+            player.sendMessage(Message.raw(""));
+            player.sendMessage(Message.raw("The Sacred Flower resists the veil."));
+            player.sendMessage(Message.raw("Its roots remain bound to this place."));
+
+            System.out.println(
+                    "[GoddessTrial] "
+                            + playerName
+                            + " tried to collect the Sacred Flower at "
+                            + x + ", " + y + ", " + z
+                            + ", but the block could not be removed."
+            );
+
+            return;
+        }
 
         ItemStack sacredFlower = new ItemStack(
                 TrialFlowerConstants.SACRED_FLOWER_ITEM_ID,

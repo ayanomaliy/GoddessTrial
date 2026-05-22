@@ -73,8 +73,23 @@ public class TrialDeathSystem extends DeathSystems.OnDeathSystem {
         }
 
         try {
-            TrialFlowerSpawner.removeStoredSacredFlower(playerName, store);
-            TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
+            /*
+             * First try the precise flower cleanup using the stored trial position.
+             * Then also clear all configured flower spots as a safety net, because older
+             * failed test runs may have left stale Sacred Flowers in the world.
+             */
+            boolean removedStoredFlower =
+                    TrialFlowerSpawner.removeStoredSacredFlower(playerName, store);
+
+            int removedConfiguredFlowers =
+                    TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
+
+            LOGGER.at(Level.INFO).log(
+                    "[GoddessTrial] Death flower cleanup for %s: storedFlowerRemoved=%s, configuredFlowersRemoved=%s.",
+                    playerName,
+                    removedStoredFlower,
+                    removedConfiguredFlowers
+            );
 
             TrialMonsterCleanupSystem.requestCleanup(playerName);
 

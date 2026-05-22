@@ -33,10 +33,25 @@ public final class TrialStarter {
             return new TrialStartResult(false, result.message());
         }
 
+        /*
+         * Remove leftover trial items from the player's inventory before starting.
+         *
+         * Important:
+         * Do not call TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store)
+         * here. It currently relies on setting blocks to "Air", but "Air" is not
+         * a valid Hytale block key in this server build. Calling it can leave stale
+         * flowers behind and pollute the world state.
+         */
         TrialInventoryUtil.removeBladeOfBalance(player, store, playerRef);
         TrialInventoryUtil.removeSacredFlower(player, store, playerRef);
 
+        /*
+         * Remove stale Sacred Flowers from all known configured spots before spawning
+         * the new one. This is safe now because removeFlowerBlock uses block ID 0,
+         * which debug confirmed is air.
+         */
         TrialFlowerSpawner.removeAllConfiguredSacredFlowers(store);
+
         boolean flowerSpawned = TrialFlowerSpawner.spawnSacredFlower(
                 playerName,
                 store,
