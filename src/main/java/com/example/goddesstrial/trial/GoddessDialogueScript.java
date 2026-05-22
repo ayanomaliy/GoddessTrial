@@ -34,7 +34,6 @@ public final class GoddessDialogueScript {
 
             page("Take my weapon, and cross the veil."),
 
-            page("Will you carry my blade?")
     };
 
     public static final String[] COMPLETION_CHAT_LINES = {
@@ -50,9 +49,7 @@ public final class GoddessDialogueScript {
 
             page("Keep it, as a sign of my gratitude."),
 
-            page("May its balance guard your path."),
-
-            page("Now... I may slumber.")
+            page("Now... I may slumber. Farewell...")
     };
 
     public static final String[] COMPLETION_AFTER_CHAT_LINES = {
