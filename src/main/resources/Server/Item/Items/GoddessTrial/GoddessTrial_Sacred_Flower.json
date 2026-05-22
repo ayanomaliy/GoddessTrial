@@ -1,6 +1,6 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.GoddessTrial_Sacred_Flower.name"
+    "Name": "server.items.goddesstrial_sacred_flower.name"
   },
   "Parent": "Plant_Flower_Common_White",
   "BlockType": {
