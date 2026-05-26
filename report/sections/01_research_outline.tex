@@ -1,21 +1,39 @@
 \section{Research Outline}
 
-Hytale is a sandbox RPG whose identity is closely connected to modding, creator tools, and community-made content. In many games, modding begins after release, when players reverse-engineer systems, edit assets, or build unofficial tools to change the game. Hytale approaches this differently. It presents creation as part of the game's basic promise, describing itself as ``an adventure built for both creation and play.'' This makes Hytale useful for asking what happens when modding is no longer outside the game, but becomes part of how the game is imagined, developed, and shared.
+Hytale is a useful case study for modding because creation is part of its basic identity.
+Instead of treating mods only as later fan additions,
+Hytale provides tools for asset editing,
+model creation,
+and Java server plugins.
+This makes modding part of the game's development pipeline.
 
-For my report, I am especially interested in this question from the perspective of computer science. Hytale does not only invite players to create content visually, but also provides a development toolkit for programming plugins. This raises a technical question: what are the limits of what can be changed through a plugin? My own mod will therefore not mainly be an asset pack or a cosmetic extension. It will be a coded Hytale plugin that changes the rules of play and tests how much control the toolkit gives to modders.
+Its modding landscape is split between asset-based and code-based work.
+Asset packs can change blocks,
+items,
+models,
+textures,
+sounds,
+and other data-driven content.
+Java server plugins can change commands,
+events,
+UI,
+multiplayer rules,
+combat behavior,
+and gameplay systems.
+For my project,
+the most important aspect is this server-side plugin model:
+the server becomes the place where rules and interactions can be rewritten,
+but only through the systems exposed by the toolkit.
 
-Hytale mods are created through a mix of official and semi-official tools. Important tools include the Hytale Asset Editor, direct data asset editing, Blockbench for models and animations, and Java server plugins for gameplay changes. These tools suggest that Hytale modding is meant for different kinds of creators: artists, builders, server owners, and programmers. Modding is not limited to changing textures or adding small cosmetic details. It can also involve new systems, multiplayer rules, custom items, and changes to how the game behaves.
-
-The main public distribution platform for Hytale mods is CurseForge, especially because public submissions, collections, and official contests are organized there. This means that mods are not only private experiments, but public artifacts that can be shared, downloaded, updated, and discussed by a wider community. At the same time, Hytale modding is still an evolving infrastructure, visible in the changing API, the unfinished tooling, and the way the developers continue to adjust what modders can access.
-
-A key part of Hytale's modding strategy is that it is server-side first. Server hosts choose which mods are active, while players can join modded servers without manually installing external files. Modding therefore becomes part of the multiplayer structure of the game, not just an individual modification. For a plugin-based mod, this is especially relevant, because the server becomes the place where rules, events, and interactions can be rewritten.
-
-Hytale modding involves several types of creators because its main formats are split between packs and plugins. Packs are focused on assets and content, such as blocks, mobs, items, textures, models, and cosmetics. Plugins are more code-based and can affect commands, events, server systems, minigames, and deeper gameplay rules. This creates a broad modding landscape that includes artists, programmers, designers, server hosts, toolmakers, documentation writers, and community organizers.
-
-One useful example is Violet, the creator of \textit{Violet's Wardrobe}, a cosmetic mod that adds craftable customization options. The mod shows the importance of visual and cosmetic creation in Hytale, but Violet is also important as a modder because she later began working with the Hytale team on official cosmetics. This shows how modding can become a visible form of creative work and even a path into the official development process. In this case, modding is not only fan activity, but also a portfolio and a bridge between community creation and professional development.
-
-The modding landscape has also changed because Hytale itself has had an unusual development history. The game was announced years ago, acquired by Riot Games, cancelled in 2025, and later revived after the original creators reacquired it. Reporting on the revival emphasizes that Hytale's return was connected to its original creator-focused vision and modding support from day one. Hytale is therefore not only a game that allows mods. It is a game whose public image and future are strongly tied to the promise of community creation.
-
-Early Hytale modding also shows how unpredictable creator communities can be. Shortly after launch, players created experimental mods that ran Windows 95, Minecraft, and even Hytale itself inside Hytale. These are not necessarily typical gameplay mods, but they show that strong modding tools can turn a game into a platform for unexpected experiments.
-
-Overall, Hytale is a useful case study because it shows modding becoming part of the development pipeline. Mods are created with official tools, shared through public platforms, used to build multiplayer spaces, and sometimes recognized by the developers themselves. My own project approaches this from the plugin side: instead of asking only what players can build, I want to ask what parts of the game's logic can be changed when the developers provide the programming interface.
+My critical mod,
+\textit{Trial of the Goddess},
+uses this plugin-based approach.
+Instead of making a cosmetic mod,
+I created a Java server plugin that changes how a player interacts with a statue,
+receives a weapon,
+moves through combat,
+and completes a ritual.
+The goal is to test how far Hytale's official toolkit allows a modder to change
+the logic of play,
+and where the limits of that pipeline become visible.
+Extended research notes are included in Appendix~\ref{app:research-notes}.

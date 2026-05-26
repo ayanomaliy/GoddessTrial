@@ -1,0 +1,105 @@
+\section{Reflection}
+
+\subsection{Working Inside Hytale's Development Pipeline}
+
+Because I had previous Minecraft modding experience and a computer science background,
+I expected \textit{Trial of the Goddess} to be challenging but manageable.
+In practice,
+Hytale's official modding pipeline was more restrictive than expected,
+which surprised me because the game presents itself as a Minecraft alternative
+built around modding,
+creation,
+and official creator tools.
+
+One reason was that Hytale is still in active development.
+During research,
+I often found references to API calls,
+classes,
+or systems that had already been deprecated,
+renamed,
+removed,
+or changed.
+Since the game is still new,
+there is also no large community knowledge base comparable to Minecraft modding.
+Many problems could not simply be looked up;
+I had to inspect asset files,
+test systems myself,
+and treat the existing game data as unofficial documentation.
+
+The main difficulty was not simply writing Java code,
+but understanding where Hytale allowed intervention.
+Expected tasks such as commands,
+chat messages,
+custom UI,
+item handling,
+sound events,
+and health changes worked reasonably well.
+However,
+the server-side plugin model created limits:
+I could not freely change the client interface,
+compass,
+rendering behavior,
+or every kind of player feedback.
+When a needed system was not exposed,
+I had to approximate it with existing tools
+or redesign the feature.
+
+The Goddess statue was the clearest example.
+I first expected the interaction to work through Java event listeners.
+Instead,
+the statue only became usable after its block JSON pointed to my custom
+\texttt{GoddessTrial\_Statue} interaction.
+Asset files were therefore not only decorative resources,
+but part of the logic that decided what the code could react to.
+Much of development became searching existing assets with PowerShell commands
+such as \texttt{Get-ChildItem} and \texttt{Get-Content}
+to find examples of swords,
+flowers,
+furniture,
+sound events,
+interaction hints,
+and block properties.
+
+Several design choices came from these limits.
+When something did not work as intended,
+I first tried to work around it within Hytale's existing systems.
+When a workaround became too unstable,
+I changed the design instead of forcing the original plan.
+
+The most disappointing example was the Sacred Flower.
+I originally wanted it to spawn dynamically in random terrain
+and developed a recursive positioner that would choose a nearby position
+and iteratively move the flower until the placement checks were valid.
+On paper,
+this was the more interesting and mathematically satisfying solution.
+In practice,
+the terrain was too unpredictable:
+the flower could appear in the air,
+underground,
+inside grass,
+too far away,
+or at invalid positions.
+The system became unreliable,
+caused crashes,
+and took too much time to stabilize before the deadline.
+
+I replaced it with manually defined positions in a fixed world.
+This was less satisfying technically,
+but it made the trial stable and playable.
+From the player's perspective,
+the flower still appears as the objective,
+the player still has to find it,
+and the ritual still works.
+The same pattern appeared elsewhere:
+the compass marker became the Sacred Flower's purple glow,
+and recurring reinforcements were disabled because spawning NPCs from inside
+a ticking system conflicted with Hytale's entity store processing.
+
+These compromises were not simply failures.
+They show that the development pipeline did not only enable the mod;
+it also shaped what the mod could realistically become.
+In the end,
+I learned to read the game itself as its own documentation:
+to follow the logic hidden in its assets,
+to force a path through systems that were not always meant for me,
+and to compromise without letting the central idea disappear.

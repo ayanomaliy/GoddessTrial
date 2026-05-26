@@ -2,86 +2,52 @@
 
 \subsection{Concept and Critical Aim}
 
-The general idea of \textit{Trial of the Goddess} is simple on the surface.
-The player can approach a mysterious statue and pray to it.
-Instead of remaining a decorative object, the statue answers and offers a trial.
-The player is asked to travel \textit{Beyond the Veil}, retrieve the \textit{Sacred Flower},
-and return it to the Goddess. To make this possible, the player receives
-the \textit{Blade of Balance}, a weapon that seems like an overwhelming gift at first.
-It can defeat enemies almost instantly, and the quest appears straightforward:
-accept the blade, find the flower, survive, and come back.
+\textit{Trial of the Goddess} turns one of Hytale's mysterious statues
+from decorative worldbuilding into the starting point of a playable ritual.
+The player can pray at the statue,
+receive a quest to travel \textit{Beyond the Veil},
+retrieve the \textit{Sacred Flower},
+and return it to the Goddess.
+To survive the trial,
+the player receives the \textit{Blade of Balance}.
 
-However, the mod is built around the idea that this simplicity is deceptive.
-The trial is much harder than it first appears because every gift from the Goddess also has a cost.
-The Blade of Balance makes the player extremely powerful, but it also makes them extremely vulnerable.
-While the blade is equipped, the player is reduced to one hit point, meaning that even the
-weakest enemy can become fatal. The quest is therefore not only about finding an object, but about
-learning how to move through danger while carrying a power that can easily become a liability.
+The critical idea of the mod is that this gift is also a curse.
+The Blade of Balance can defeat enemies almost instantly,
+but while it is equipped,
+the player is reduced to one hit point.
+It also only has three empowered hits before it has to recharge.
+This means that the player is extremely powerful,
+but never safe.
 
-The first critical aim of the mod is to change the meaning of an existing object in Hytale.
-The statues in the game already feel important: they look ancient, sacred, and connected to a
-larger mythology. However, when they remain mostly decorative, their meaning stays atmospheric
-rather than mechanical. My mod uses this gap as a starting point. By making one of these statues
-respond to the player, speak through title overlays, offer a trial, and permanently change
-the player's state, the statue becomes more than background worldbuilding. It becomes a threshold
-between ordinary exploration and a ritualized form of danger.
-
-This changes how the player reads the environment. A statue is no longer just something to
-look at or walk past. It becomes something the player approaches with uncertainty:
-it might offer power, but that power has consequences. In this way, the mod gives the player a
-hint of hidden lore without fully explaining it. The Goddess is not presented as a normal quest
-giver or NPC. She is a fading presence attached to stone, memory, and ritual.
-This makes the interaction feel less like receiving a standard objective and more like
-disturbing something old that still has agency.
-
-The second critical aim is to change how the player understands combat power.
-In a normal combat situation, stronger weapons usually make the player feel safer.
-If the player can block, absorb damage, and slowly defeat enemies, then combat often
-becomes a question of damage output and equipment strength. Large monsters appear
-threatening because they look powerful, have more health, and can deal more damage.
-Small enemies, such as rats, usually feel like minor obstacles.
-They are annoying, but not frightening.
-
-The Blade of Balance reverses this expectation.
-It makes the player almost absurdly powerful, but only under very unstable conditions.
-Since the blade can defeat enemies in one hit, a
-giant monster is no longer necessarily the greatest threat.
-Its large body and slower movement can even make it easier to hit.
-By contrast, a group of small enemies becomes much more dangerous.
-A herd of rats is fast, difficult to control, and hard to eliminate
-cleanly when the player can only survive one mistake.
-The player's fear shifts from the impressive enemy to the inconvenient one.
-
-This shift becomes stronger through the blade's recharge mechanic.
-The Blade of Balance can only deliver three empowered hits before it needs
-to recharge for five seconds. On paper, five seconds does not sound long.
-In practice, it changes the whole rhythm of combat.
-If the blade runs out of power while the player is being chased by
-several small enemies, those five seconds become a long period of panic.
-The player cannot simply keep attacking.
-They must dodge, retreat, hide, reposition, or avoid the fight altogether.
-The mod therefore turns combat into a problem of timing and movement rather than only damage.
-
-The result is a form of power that does not create comfort.
-The player is given a weapon that looks like a reward, but behaves like a curse.
-It asks the player to think differently about strength:
-being able to kill anything does not mean being safe from everything.
-This is where the mod becomes critical. It does not just make Hytale harder.
-It questions the usual relationship between power, safety, and mastery in combat-heavy games.
+The mod therefore changes two central expectations.
+First,
+a statue is no longer only atmospheric scenery,
+but an object with agency,
+lore,
+and mechanical consequences.
+Second,
+combat power no longer means security.
+Large monsters can become easy targets,
+while small enemies such as rats become dangerous because one mistake is fatal.
 The player becomes both hunter and prey at the same time.
 
+In this way,
+\textit{Trial of the Goddess} does not simply make Hytale harder.
+It questions the usual relationship between power,
+safety,
+and mastery in combat-heavy games.
+
+%---------------------------------------------------------------------------------------------------
 
 \subsection{Gameplay Loop}
 
 The gameplay loop begins when the player approaches the Goddess statue
 and presses the interaction key F.
-Instead of treating the statue as a passive decoration,
-the mod turns it into the starting point of the trial.
-The player places their hand on the stone,
-receives short dialogue lines from the Goddess,
-and is then shown a simple choice:
-accept the Blade and begin the trial,
-or refuse and leave the statue behind.
+The statue is no longer passive scenery,
+but becomes the starting point of the trial.
+After a short dialogue sequence,
+the player can either accept the Blade of Balance
+or refuse the Goddess' offer.
 
 \begin{center}
     \begin{minipage}{0.48\textwidth}
@@ -102,11 +68,16 @@ or refuse and leave the statue behind.
 \end{center}
 
 If the player accepts,
-the trial starts immediately.
-The Sacred Flower spawns somewhere in the area,
+the trial starts immediately:
+the Sacred Flower appears,
 the player receives the Blade of Balance,
 custom sound effects play,
-and a wave of monsters appears nearby.
+and a wave of monsters spawns nearby.
+While holding the Blade,
+the player is reduced to one hit point.
+The weapon can defeat enemies almost instantly,
+but only has three empowered hits
+before it needs to recharge for five seconds.
 
 \begin{center}
     \begin{minipage}{0.38\textwidth}
@@ -126,21 +97,10 @@ and a wave of monsters appears nearby.
         \includegraphics[width=0.75\linewidth]{images/img_6}
 
         \small
-        Figure: After accepting the trial,
-        monsters spawn nearby and the player's health is reduced to 1 HP
-        while holding the Blade.
+        Figure: Monsters spawn nearby and the player's health is reduced
+        to 1 HP while holding the Blade.
     \end{minipage}
 \end{center}
-
-The objective sounds simple:
-find the Sacred Flower and bring it back to the statue.
-During the trial,
-the player has the Blade of Balance equipped.
-While equipped,
-the blade reduces the player's health to one hit point.
-The blade can defeat enemies almost instantly,
-but it only has three empowered hits
-before it needs to recharge for five seconds.
 
 \begin{center}
     \includegraphics[width=0.9\textwidth]{images/img_7}
@@ -150,11 +110,11 @@ before it needs to recharge for five seconds.
     while enemies continue to chase the player.
 \end{center}
 
-The Sacred Flower is the objective of the trial.
-It can be spotted by its purple glow
-and picked up with the interaction key.
-After picking it up,
-the player has to return to the statue.
+The objective is to find the Sacred Flower,
+pick it up,
+and return to the statue alive.
+The flower is marked by its purple glow,
+so it can be found through the environment rather than through a compass marker.
 
 \begin{center}
     \includegraphics[width=0.75\textwidth]{images/img_8}
@@ -164,12 +124,12 @@ the player has to return to the statue.
     and can be picked up with the interaction key.
 \end{center}
 
-If the player returns to the statue without the Sacred Flower,
+If the player returns without the Sacred Flower,
 the Goddess reminds them that the flower is still missing.
 If the player dies,
-the trial fails and the temporary trial items are removed.
-If the player returns with the Sacred Flower,
-the Goddess accepts it,
+the trial fails and temporary trial items are removed.
+If the player returns successfully,
+the Goddess accepts the flower,
 the completion dialogue plays,
 and the trial is finished permanently.
 As a reward,
@@ -200,103 +160,71 @@ pray,
 accept,
 retrieve,
 return.
-If the player dies,
-the loop resets.
-If the player succeeds,
-the ritual is completed and cannot be repeated.
+Death resets the trial;
+success completes it permanently.
 
+%-----------------------------------------------------------------------------------------------------
+\subsubsection{Gameplay Video}
 
+There is a common saying that an image can speak a thousand words.
+Following that logic,
+a video can show a thousand images,
+or around thirty images per second.
+For \textit{Trial of the Goddess},
+this matters because the mod depends heavily on timing,
+movement,
+sound,
+and pressure.
 
+Screenshots document individual moments,
+but the gameplay video shows how those moments connect.
+It shows the ritual as it is actually experienced:
+not as separate systems,
+but as one continuous sequence.
+At this point,
+the video can speak for itself.
+
+\begin{center}
+    \href{https://youtu.be/CctIfYMitXA?si=-ceZpl9l_rW2kv8R}
+    {\textit{Trial of the Goddess} gameplay video}
+\end{center}
+% --------------------------------------------------------------------------------------------
 \subsection{Atmosphere, Lore, and Player Experience}
 
-The gameplay loop is simple,
-but the experience of playing it is intentionally tense.
-The player receives a weapon that appears divine,
-but the interface constantly reminds them that they are close to death.
-While holding the Blade of Balance,
-the health bar is reduced to one hit point.
-The red screen edges,
+The trial is designed to feel tense despite its simple structure.
+The player receives a divine weapon,
+but the interface constantly signals danger:
+one hit point,
+red screen edges,
 the low-health warning,
-and the constant blinking sound effect
-make the player's vulnerability impossible to ignore.
-Even before an enemy attacks,
-the mod communicates that a single mistake is enough to fail.
-
-
-This changes how combat feels.
-A giant monster looks dangerous,
-but its slow movement and large hitbox
-make it easier to strike with the Blade.
-Small enemies,
+and the blinking sound effect.
+This changes combat immediately.
+Large monsters can be easier to strike because they are slow and visible,
+while small enemies,
 especially rats,
-become more threatening than expected.
-They are fast,
-harder to control,
-and can surround the player while the blade is recharging.
-The five-second recharge is short in technical terms,
-but when the player is cornered,
-hearing monsters roar nearby,
-it feels much longer.
-The player is powerful enough to kill almost anything,
-but fragile enough to be killed by almost anything.
+become dangerous because they are fast,
+hard to control,
+and deadly during the Blade's recharge.
 
-
-
-The atmosphere of the mod is built around contradiction.
-At first,
-the Goddess statue appears peaceful.
-The player approaches it as a sacred object,
-not as an enemy.
-The Goddess also begins gently,
+The atmosphere is built around contradiction.
+The Goddess statue appears peaceful,
+and the Goddess speaks gently,
 calling the player
 ``little wanderer''
 and telling them not to be afraid.
-Her own sound effect supports this impression:
-it is calm,
-divine,
-and distant,
-but also slightly eerie,
-as if the voice comes from outside the normal world.
+Yet the Blade of Balance sounds tense and threatening when it is received.
+The statue feels sacred,
+but the gift feels dangerous.
+This makes the player question what kind of Goddess she is
+and why balance requires such a violent weapon.
 
-This calmness changes when the player accepts the Blade of Balance.
-The sound that plays when receiving the weapon is not peaceful.
-It is tense,
-eerie,
-and almost threatening,
-like a reversed gong echoing through the player's ears.
-This sound contradicts the Goddess' friendly tone.
-The statue looks serene,
-and the Goddess speaks softly,
-but the weapon she gives the player sounds dangerous.
-Because of this,
-the player is pushed to question her.
-If this is her weapon,
-what kind of Goddess is she?
-What is the place beyond the veil?
-Why is she trapped there?
-And why does balance require something so violent?
-
-The Goddess' lore gives this pressure a deeper meaning.
-She is not written as a normal quest giver.
-She is a fading deity whose name has almost disappeared,
-and whose soul is trapped beyond the veil.
-The Sacred Flower is not just an item,
-but the last piece of herself.
-Returning it is therefore not only a quest objective,
+The lore supports this uncertainty.
+The Goddess is not a normal quest giver,
+but a fading deity whose name has almost disappeared.
+The Sacred Flower is the last piece of herself,
+so returning it is not just an objective,
 but an act of restoration.
-The player helps her become whole enough to finally slumber.
-
-
-The dialogue supports this tone through short,
-ritual-like title lines.
-Sentences such as
-``My soul is trapped beyond the veil''
-and
-``It is the last piece of myself''
-make the statue interaction feel like a prayer
-rather than a normal menu.
-
-The first interaction with the statue therefore reads like a short ritual
+The first interaction therefore reads like a short ritual
 rather than a standard quest prompt:
 
 \begin{tcolorbox}[
@@ -340,323 +268,70 @@ rather than a standard quest prompt:
     Take my weapon, and cross the veil.
 \end{tcolorbox}
 
-
-The Goddess does not explain everything directly.
-Instead,
-her words suggest a larger mythology:
+The dialogue suggests a larger mythology
+without fully explaining it:
 a world where divine beings can fade,
 where memory has power,
-and where balance always demands a cost.
+and where balance demands a cost.
+
+My goal was to make the world feel larger than the mod itself.
+Even though no additional Goddess quests are implemented yet,
+the statue,
+the Blade,
+and the Sacred Flower should feel like fragments of something bigger.
+The player should want to ask what lies beyond the veil,
+why the Goddess needs the flower,
+and whether other statues might hide similar stories.
 
 
-
-This creates a contrast between sacred atmosphere and panic.
-The Goddess speaks calmly about balance,
-loss,
-and completion,
-while the player is running through combat with one hit point.
-The peaceful statue,
-the eerie divine voice,
-the frightening blade sound,
-the monster roars,
-and the low-health warning all pull in different directions.
-That contradiction is intentional.
-The mod uses sound,
-interface feedback,
-dialogue,
-and combat pressure to make the same point:
-power is not safety.
-The Blade of Balance gives the player divine strength,
-but everything around it suggests that this power is unstable,
-dangerous,
-and not fully trustworthy.
-
-
-
-
-\begin{tcolorbox}[
-    title={Refusing the trial},
-    colback=gray!5,
-    colframe=gray!60,
-    arc=2mm,
-    boxrule=0.5pt
-]
-Then leave me to my silence.
-
-\medskip
-
-\textit{The stone grows cold beneath your hand.}
-\end{tcolorbox}
-
-
-
-\begin{tcolorbox}[
-    title={Returning without the Sacred Flower},
-    colback=gray!5,
-    colframe=gray!60,
-    arc=2mm,
-    boxrule=0.5pt
-]
-The Sacred Flower is not with you.
-
-\medskip
-
-Find it and bring it to me...
-
-\medskip
-
-So I can be complete once again.
-\end{tcolorbox}
-
-
-
-\begin{tcolorbox}[
-    title={Completing the trial},
-    colback=gray!5,
-    colframe=gray!60,
-    arc=2mm,
-    boxrule=0.5pt
-]
-\textit{The Sacred Flower trembles in your hands.
-Its light sinks into the cold stone.}
-
-\medskip
-
-Finally... I am whole again.
-
-\medskip
-
-Thank you,
-little wanderer.
-
-\medskip
-
-I have no need for the blade anymore.
-
-\medskip
-
-Keep it,
-as a sign of my gratitude.
-
-\medskip
-
-Now... I may slumber.
-Farewell...
-
-\medskip
-
-\textit{The warmth fades.
-The voice is gone.
-The statue is only stone again.}
-
-\medskip
-
-\textit{The Trial of the Goddess is complete.}
-\end{tcolorbox}
-
-
-
-Writing the dialogue was more difficult than expected.
-I had a clear concept in mind,
-and the Goddess needed enough dialogue to explain the basic story:
-who she is,
-why the Sacred Flower matters,
-and why the player receives the Blade of Balance.
-However,
-Hytale's title display only worked well with one line of text at a time.
-This meant that the dialogue had to be split into many short title pages.
-At first,
-this made the sequence too long and slow to read.
-
-The challenge was finding a balance between atmosphere and pacing.
-The dialogue had to suggest the lore clearly enough
-for the player to understand the trial,
-but it also had to stay short enough
-to avoid becoming boring before the gameplay even started.
-After testing the interaction several times,
-I noticed that waiting for the full dialogue every time became annoying.
-To solve this,
+Writing the dialogue was also a design problem.
+Hytale's title display worked best with one short line at a time,
+so the text had to be split into ritual-like fragments.
+After testing,
 I added a skip feature:
-if the player presses the interaction key again while the Goddess is speaking,
-the dialogue stops and the offer page opens immediately.
-This keeps the ritual feeling for the first interaction,
-but makes repeated testing and replaying less frustrating.
+pressing the interaction key again while the Goddess is speaking
+opens the offer page immediately.
+This keeps the atmosphere for the first interaction,
+but avoids making repeated attempts feel slow.
 
+Additional dialogue variants,
+including refusal,
+returning without the Sacred Flower,
+and completing the trial,
+are included in Appendix~\ref{app:dialogue}.
 
-From the player's perspective,
-the trial should feel like one continuous ritual.
-The statue wakes,
-the Goddess speaks,
-the Blade demands a price,
-the Sacred Flower appears,
-and the trial either collapses through death
-or closes through completion.
-In the code,
-however,
-this ritual is not one object or one script.
-It is assembled from many smaller systems that have to pass control to each other
-at the right moment.
-
+% --------------------------------------------------------------------------------------------
 \subsection{Implementation Overview}
 
-At first glance,
-\textit{Trial of the Goddess} looks like a small mod:
-a statue is used,
-a blade is granted,
-a flower is retrieved,
-and the ritual is completed.
-In the implementation,
-this simple loop becomes a network of systems:
-state management,
-dialogue timing,
-custom UI,
-damage handling,
-monster spawning,
-block interaction,
-objective tracking,
-asset configuration,
-persistence,
-and cleanup logic.
-
-\begin{center}
-    \includegraphics[width=0.95\textwidth]{images/mermaid-diagram-even-more-confusing}
-
-    \small
-    Figure: Full dependency graph generated from the source code.
-    The graph is intentionally dense and shows the implementation complexity
-    behind a seemingly simple gameplay loop.
-\end{center}
-
-The simplified architecture below groups the mod into six main parts:
-assets,
-entry points,
+Although \textit{Trial of the Goddess} feels like one continuous ritual,
+the implementation is split into several smaller systems.
+This separation was necessary because the mod changes many parts of the game at once:
+statue interaction,
+dialogue,
+UI,
 trial state,
-gameplay systems,
-player feedback,
+the Blade's health and damage behavior,
+flower spawning,
+monster spawning,
+persistence,
 and cleanup.
-This is the structure that makes the player experience feel like one continuous ritual,
-even though the code has to coordinate several different responsibilities.
+
+The most important design decision was to separate the trial state from the visible effects.
+The core state decides what is allowed:
+whether the trial has not started,
+has been offered,
+is active,
+has failed,
+or has already been completed.
+Other systems then react to that state by showing dialogue,
+granting the Blade,
+spawning enemies,
+placing the Sacred Flower,
+or cleaning up temporary objects.
+This prevented different parts of the mod from contradicting each other.
 
 \begin{center}
-    \includegraphics[width=0.95\textwidth]{images/mermaid-abstact}
-
-    \small
-    Figure: Simplified architecture of the GoddessTrial plugin.
-    The diagram groups the implementation into the main responsibilities
-    instead of showing every class and dependency.
-\end{center}
-
-
-\subsubsection{Asset Pack and JSON Configuration}
-
-The asset layer was originally planned as a supporting part of the mod.
-I expected the main logic to happen in Java,
-while assets would only provide the statue,
-the Blade of Balance,
-the Sacred Flower,
-and the sound effects.
-This turned out to be too simple.
-In Hytale,
-not every block automatically creates an interaction event.
-The Goddess statue only became usable after its JSON configuration was changed
-to point to the custom \texttt{GoddessTrial\_Statue} interaction.
-
-This made asset files part of the actual implementation logic.
-To find the right structure,
-I had to inspect existing Hytale JSON files
-and compare the statue to other interactive blocks.
-The same happened with the Sacred Flower.
-At first,
-the plugin only remembered the position of an ordinary flower
-and treated that position as special.
-The final version uses a custom Sacred Flower asset with its own item/block ID,
-quest tags,
-a purple texture,
-and a light property that makes it glow.
-The objective is therefore visible in the world,
-not only hidden in Java state.
-
-One unresolved asset issue remains:
-the Sacred Flower appears correctly in the world,
-but the inventory displays its internal item ID
-instead of the name from the language file.
-I could not determine whether this was caused by the language file path,
-the translation key,
-or Hytale's current asset loading behavior.
-Since it does not affect the trial logic,
-I left it as a minor visual bug.
-
-The asset layer therefore does more than provide visuals.
-It defines which objects can be interacted with,
-which items and sounds exist,
-where the flower can spawn,
-and how the player recognizes the objective.
-
-
-\subsubsection{Entry Points}
-
-The mod has two entry points:
-the Goddess statue and the \texttt{/trial} commands.
-The commands were mainly useful during development,
-because they allowed me to test starting,
-accepting,
-refusing,
-resetting,
-and checking the trial before the statue interaction worked reliably.
-In the final mod,
-the statue is the main player-facing entry point,
-while the commands remain as debugging and recovery tools.
-
-The main challenge was that the same statue interaction had to mean different things
-depending on the current situation.
-It can start the prayer sequence,
-skip already-running dialogue,
-remind the player to find the flower,
-complete the ritual,
-or remain silent after the Goddess is gone.
-The statue therefore became a state-dependent gateway rather than a simple button.
-
-This also required persistent storage.
-A completed trial must survive disconnects and restarts,
-otherwise the Goddess could offer the ritual again.
-Unfinished trials,
-however,
-are not restored after a restart.
-This was a deliberate simplification:
-restoring active trials created unstable cases with old items,
-leftover flowers,
-monsters,
-and health effects.
-Instead,
-unfinished trials are treated as failed and cleaned up when the player returns.
-
-
-\subsubsection{Trial Core}
-
-The Trial Core is the rule system behind the ritual.
-It decides which actions are valid at which moment,
-while other systems create the visible effects.
-The trial behaves like a small state machine:
-the player moves from no trial,
-to an offered trial,
-to an active trial,
-and finally either back to no trial after failure
-or into the permanent completed state.
-
-This shared state prevents different parts of the mod from contradicting each other.
-The statue,
-commands,
-UI buttons,
-death handling,
-flower pickup,
-and cleanup systems all depend on the same trial phase.
-Without this shared source of truth,
-the player could accept a trial that was never offered,
-complete a trial that is not active,
-or restart the ritual after it has already been completed.
-
-\begin{center}
-    \includegraphics[height=0.65\textheight,keepaspectratio]{images/statuelogic}
+    \includegraphics[height=0.55\textheight,keepaspectratio]{images/statuelogic}
 
     \small
     Figure: State-dependent behavior of the Goddess statue.
@@ -667,41 +342,17 @@ or restart the ritual after it has already been completed.
     or stay silent depending on the current trial state.
 \end{center}
 
-The most important design choice is that \texttt{COMPLETED} is permanent.
-Once the Goddess has received the Sacred Flower,
-the trial cannot be offered again.
-This makes the state machine part of the story:
-failure resets the ritual,
-but success changes the world for that player.
-The Goddess is gone,
-the statue no longer offers the trial,
-and the Blade remains as proof that the ritual happened.
-
-
-\subsubsection{Gameplay Systems}
-
-The gameplay systems turn an accepted trial into a playable challenge.
-After the Trial Core validates the transition into the active phase,
-the mod removes leftover trial items,
-clears old flower positions,
-spawns the Sacred Flower,
-grants the Blade of Balance,
-reduces the player's health,
-and spawns the monster wave.
-
-The Blade of Balance is the central gameplay system.
-It was designed around a contradiction:
-the player should become extremely powerful,
-but also extremely vulnerable.
-The final version does not reduce maximum health.
-Instead,
-while the Blade is equipped,
-current health is repeatedly forced back to one hit point.
-If the player heals while holding it,
-the system pushes the health down again.
+The Blade of Balance is handled as its own gameplay system.
+It does not simply increase damage.
+While the Blade is held,
+the player's current health is forced back to one hit point,
+and the empowered attacks are limited by a recharge cycle.
+This keeps the critical idea of the mod inside the code structure:
+power is granted,
+but it is never safe.
 
 \begin{center}
-    \includegraphics[height=0.65\textheight,keepaspectratio]{images/swordlogic}
+    \includegraphics[height=0.55\textheight,keepaspectratio]{images/swordlogic}
 
     \small
     Figure: Logic of the Blade of Balance.
@@ -711,248 +362,18 @@ the system pushes the health down again.
     before a recharge phase begins.
 \end{center}
 
-The damage system adds a second limitation.
-A permanently infinite-damage weapon removed too much tension,
-so the Blade has three empowered hits before it must recharge for five seconds.
-This creates short windows of power followed by forced weakness.
-The player can kill almost anything,
-but cannot attack endlessly.
+The main technical struggles came from the limits of Hytale's current toolkit.
+The statue only became interactive after its JSON asset configuration pointed
+to the custom \texttt{GoddessTrial\_Statue} interaction,
+so asset files became part of the logic rather than only visuals.
+The Sacred Flower could not reliably spawn through a fully dynamic terrain search,
+so I used manually configured positions in a fixed world.
+A compass marker was replaced by the flower's purple glow,
+and recurring monster reinforcements were disabled after they caused
+entity-store problems.
 
-Monster spawning supports this design.
-The initial wave contains flying,
-small,
-normal,
-and giant monsters,
-plus a concentrated herd of rats.
-The rat herd became important because small enemies are harder to control
-when the player has only one hit point
-and the Blade may be recharging.
-A planned reinforcement system was disabled,
-because spawning NPCs from inside a ticking system conflicted with Hytale's
-entity store processing.
-The initial wave remains,
-but automatic reinforcements were removed for stability.
-
-The Sacred Flower objective also had to be simplified.
-Random terrain-based spawning was unreliable:
-the flower could appear in the air,
-underground,
-inside grass,
-too far away,
-or at the wrong height.
-The final version uses manually configured flower positions on a fixed map.
-The positions are shuffled when the trial starts,
-and the spawner tries them until a valid one works.
-
-
-\subsubsection{Player Feedback}
-
-The feedback layer makes the trial understandable and atmospheric.
-Without dialogue,
-UI,
-objectives,
-chat messages,
-and sound effects,
-the mod would still work mechanically,
-but it would feel like a debug script:
-a sword appears,
-health changes,
-monsters spawn,
-and a flower has to be found.
-
-The Goddess dialogue was difficult because Hytale's title display worked best
-with one short line at a time.
-My first version was too long and slowed the beginning of the trial down.
-I rewrote it into shorter,
-ritual-like title pages
-and added a skip feature:
-pressing the interaction key again while the Goddess is speaking
-opens the offer UI immediately.
-This keeps the atmosphere for the first interaction,
-but makes repeated testing and replaying less frustrating.
-
-Sound became part of the same feedback system.
-Custom sound events were added for the Goddess voice
-and for receiving the Blade of Balance.
-The Goddess sound is calm and divine,
-while the Blade sound is tense and eerie.
-This contrast supports the uncertainty around the Goddess:
-her words are gentle,
-but her weapon feels dangerous.
-
-The objective system was simplified for reliability.
-I originally wanted it to update after the Sacred Flower was picked up,
-but mid-trial objective updates did not behave reliably.
-The final objective therefore gives the full instruction from the beginning:
-find the Sacred Flower nearby and return it to the statue.
-A compass marker was also planned,
-but abandoned because it did not appear reliably.
-Instead,
-the flower itself became the guide through its purple glow.
-
-
-\subsubsection{Cleanup Systems}
-
-Cleanup became one of the most important parts of the plugin
-because the trial temporarily changes the player,
-the inventory,
-and the world.
-It gives special items,
-places a flower block,
-spawns monsters,
-changes health behavior,
-tracks objectives,
-and stores trial state.
-If any of these remain after death,
-disconnect,
-restart,
-or failed testing,
-the world quickly becomes polluted with leftover objects and broken states.
-
-The final cleanup behavior is defensive.
-On death,
-the trial is failed,
-the objective is cleared,
-temporary items are removed,
-Blade energy is cleared,
-flower cleanup is attempted,
-and monster cleanup is scheduled.
-On join,
-a delayed validation checks whether cleanup is pending
-and removes leftover state where possible.
-On server shutdown,
-ongoing trials are marked as failed
-so that cleanup can continue after restart.
-For debugging,
-\texttt{/trial reload} performs a stronger manual reset
-by clearing trial items,
-objectives,
-flower positions,
-health behavior,
-and trial state.
-
-Cleanup also separates failure from success.
-If the player dies,
-the trial resets and can be attempted again.
-If the player completes the ritual,
-the Goddess becomes whole,
-the completed state is saved permanently,
-and the player keeps the Blade of Balance as a reward.
-In this way,
-cleanup is not only technical maintenance.
-It protects the story state of the mod.
-
-
-\subsection{Working Inside Hytale's Development Pipeline}
-\label{subsec:hytale-pipeline-limits}
-
-After explaining the architecture of the mod,
-it becomes clearer how strongly the final design was shaped by Hytale's official
-development pipeline.
-The Hytale Development Toolkit made the beginning of the project accessible:
-it generated the basic plugin structure,
-provided a local server configuration,
-and made expected tasks relatively straightforward.
-Registering commands,
-sending chat messages,
-opening a custom UI,
-giving the player an item,
-and changing health values all felt like features the toolkit was designed to support.
-
-At the same time,
-this convenience sometimes made the underlying system less transparent.
-As someone with a computer science background,
-I found it frustrating that many steps were hidden behind generated configurations.
-At first,
-it was not obvious what the server configuration did,
-what it did not do,
-and how the plugin,
-asset pack,
-server,
-and client interacted.
-Because repeatedly building,
-deploying,
-stopping,
-and restarting the server became inconvenient,
-I eventually wrote my own workflow for this instead of relying only on the intended setup.
-
-The clearest example was the Goddess statue.
-I first expected the statue interaction to be solvable mainly through Java event listeners.
-However,
-the statue did not automatically create a useful interaction event.
-The important change had to happen in the block's JSON configuration:
-the statue needed an interaction section that pointed to my custom
-\texttt{GoddessTrial\_Statue} interaction.
-This changed how I understood Hytale modding.
-The asset files were not just decorative resources;
-they were part of the logic that decided what the Java code could react to.
-
-Because of this,
-a large part of development consisted of inspecting existing assets.
-I repeatedly used PowerShell commands such as
-\texttt{Get-ChildItem}
-and
-\texttt{Get-Content}
-to search through Hytale's asset files for examples of swords,
-flowers,
-furniture,
-sound events,
-interaction hints,
-and block properties.
-In practice,
-the asset folder became a kind of unofficial documentation.
-
-Several final design choices came from this process.
-The first was the Sacred Flower navigation.
-I originally wanted to guide the player with a compass or objective marker,
-but Hytale's marker systems were difficult to access
-and did not behave reliably during testing.
-Instead of spending the whole project on an unstable navigation feature,
-I changed the design:
-the Sacred Flower itself became easier to find
-through its purple glow and light effect.
-This made the objective less automated,
-but more reliable and atmospheric.
-
-The second compromise was flower placement.
-I originally wanted the Sacred Flower to spawn through a dynamic terrain search.
-This sounded better in theory,
-because it would have allowed the trial to work naturally in randomly generated worlds.
-In practice,
-this proved difficult because the terrain was different every time.
-The flower could spawn in the air,
-underground,
-inside grass,
-too far away,
-or at invalid terrain positions.
-A more complete solution would have required an algorithm that searches the nearby terrain
-and generates valid flower spawn candidates automatically.
-
-For this version,
-I chose a more controlled solution.
-Instead of writing a full terrain-placement system,
-I used a fixed world and manually defined a set of possible flower coordinates.
-When the trial starts,
-these positions are shuffled,
-and the spawner tries them until one works.
-This solution is not as satisfying as a fully dynamic system,
-but it makes the trial playable,
-stable,
-and easy to document.
-
-The third compromise was monster reinforcement.
-The original plan included recurring enemy waves during an active trial.
-However,
-spawning NPCs from inside a ticking system conflicted with Hytale's
-entity store processing.
-I therefore kept the initial monster wave,
-but disabled automatic reinforcements.
-This still creates immediate pressure,
-while avoiding an unstable system that could break the trial during play.
-
-These compromises were not simply failures.
-They show how the official development pipeline shaped the final mod.
-Where Hytale's intended systems worked well,
+These compromises shaped the final mod.
+Where Hytale's intended systems worked,
 I used them directly:
 custom interactions,
 UI pages,
@@ -961,12 +382,19 @@ item effects,
 and block JSON files.
 Where they became unreliable,
 I changed the design instead of forcing the original plan.
-The final mod is therefore not only the result of what I wanted to build,
-but also of what the toolkit made practical,
-stable,
-and testable.
+Detailed architecture diagrams,
+asset configuration notes,
+and the full implementation breakdown are included in
+Appendix~\ref{app:implementation-details}.
 
+The source code of the mod is available in the GitHub repository:
 
+\begin{center}
+    \href{https://github.com/ayanomaliy/GoddessTrial.git}
+    {\textit{Trial of the Goddess} GitHub repository}
+\end{center}
+
+% --------------------------------------------------------------------------------------------
 \subsection{Custom Sound and Zelda Inspiration}
 
 The atmosphere of \textit{Trial of the Goddess} is inspired by shrine
@@ -974,55 +402,22 @@ and goddess interactions in
 \textit{The Legend of Zelda: Breath of the Wild}
 and
 \textit{Tears of the Kingdom}.
-I did not copy these games directly,
-but used them as references for the feeling of ancient voices,
+I used these games as references for ancient voices,
 ritual interaction,
 sacred spaces,
-and reward-through-trial.
+and reward-through-trial,
+without copying their audio directly.
 
-This also influenced the custom sound effects.
-Because the sound design was inspired by existing games,
-I did not want to simply copy or reuse copyrighted audio.
-Instead,
-I recreated the intended feeling myself using the Serum synthesizer.
-This was an important part of the modding process,
-because creating a mod is not only programming.
-It also involves asset creation,
+Because of this,
+I recreated the intended sound myself in Serum instead of reusing copyrighted material.
+This mattered because the mod was not only a programming task:
+it also required asset creation,
 sound design,
-and deciding how the final experience should feel.
+and decisions about how the final experience should feel.
 
 \begin{center}
-    \includegraphics[width=0.75\textwidth]{images/img_11}
+    \includegraphics[width=0.65\textwidth]{images/img_11}
 
     \small
     Figure: Creating custom sound effects for the mod in Serum.
 \end{center}
-
-
-\subsubsection{Gameplay Video}
-
-There is a common saying that an image can speak a thousand words.
-Following that logic,
-a video can show a thousand images,
-or around thirty images per second.
-For \textit{Trial of the Goddess},
-this matters because the mod depends heavily on timing,
-movement,
-sound,
-and pressure.
-
-Screenshots document individual moments,
-but the gameplay video shows how those moments connect.
-It shows the ritual as it is actually experienced:
-not as separate systems,
-but as one continuous sequence.
-At this point,
-the video can speak for itself.
-
-
-
-\href{https://youtu.be/CctIfYMitXA?si=-ceZpl9l_rW2kv8R}
-{\textit{Trial of the Goddess} gameplay video}.
-
-
-
